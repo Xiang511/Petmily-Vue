@@ -33,12 +33,13 @@ router.beforeEach((to, from) => {
     document.title = to.meta.title
   }
 
-  // 強制登出：不論是否已登入、是否有權限，訪問後台（/dashboard 開頭）一律先登出再要求重新登入
+  // 後台（/dashboard 開頭）需要登入；未登入才導向後台登入頁
   // 登入頁本身排除，避免導向後產生無限迴圈
   if (to.path.startsWith('/dashboard') && to.path !== '/dashboard/login') {
-    authStore.clearLoginInfo()
-    console.log('訪問後台，強制登出並跳轉到 /dashboard/login:', to.path)
-    return '/dashboard/login'
+    if (!authStore.isLoggedIn) {
+      console.log('後台未登入，跳轉到 /dashboard/login:', to.path)
+      return '/dashboard/login'
+    }
   }
 
   // 防止直接訪問錯誤頁面（403, 404）

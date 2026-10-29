@@ -30,6 +30,34 @@ const togglePasswordVisibility = () => {
 }
 
 /**
+ * 完成登入：寫入 store 並跳轉後台
+ */
+const completeLogin = async (user, title) => {
+  authStore.setLoginInfo(user)
+  await nextTick()
+
+  Swal.fire({
+    icon: 'success',
+    title,
+    text: '正在跳轉...',
+    timer: 2000,
+    timerProgressBar: true,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+  })
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+  Swal.close()
+
+  try {
+    await router.replace('/dashboard')
+  } catch (navError) {
+    console.warn('路由跳轉失敗，使用硬跳轉', navError)
+    window.location.href = '/dashboard'
+  }
+}
+
+/**
  * 步驟一：發送驗證碼（同時驗證密碼）
  * POST /api/Auth/login/request-code
  */
@@ -74,6 +102,12 @@ const requestVerificationCode = async () => {
 
     // 檢查密碼驗證是否成功
     if (response.status === 200 && response.data?.success) {
+      // 距上次登入 20 分鐘內，後端已直接發 cookie，不需驗證碼
+      if (response.data.data?.skipVerification && response.data.data?.user) {
+        await completeLogin(response.data.data.user, '登入成功！')
+        return
+      }
+
       // 保存第一步的響應數據，可能包含 sessionId 或其他需要的信息
       firstStepResponse.value = response.data
       isPasswordVerified.value = true
@@ -150,40 +184,7 @@ const verifyCodeAndLogin = async () => {
 
     // 檢查驗證是否成功
     if (response.status === 200 && response.data?.data?.user) {
-      // 設定登入資訊
-      authStore.setLoginInfo(response.data.data.user)
-
-      // 等待 store 更新完成
-      await nextTick()
-
-      console.log('登入成功，準備跳轉到 /dashboard/ecommerce')
-
-      // 顯示成功訊息，強制等待 2 秒
-      Swal.fire({
-        icon: 'success',
-        title: '登入成功！',
-        text: '正在跳轉...',
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-      })
-
-      // 強制等待 2000 毫秒
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      // 關閉 Swal
-      Swal.close()
-
-      // 使用 replace 並處理可能的錯誤
-      try {
-        await router.replace('/dashboard')
-      } catch (navError) {
-        // 如果路由跳轉失敗，使用硬跳轉
-        console.warn('路由跳轉失敗，使用硬跳轉', navError)
-        window.location.href = '/dashboard/ecommerce'
-      }
+      await completeLogin(response.data.data.user, '登入成功！')
     } else {
       throw new Error(response.data?.message || '驗證碼驗證失敗')
     }
@@ -274,40 +275,7 @@ const handleGoogleLogin = async () => {
     const userData = backendResponse.data?.data?.user
 
     if (isSuccess && userData) {
-      // 設定登入資訊
-      authStore.setLoginInfo(userData)
-
-      // 等待 store 更新完成
-      await nextTick()
-
-      console.log('✅ Google 登入成功，準備跳轉')
-
-      // 顯示成功訊息，強制等待2秒
-      Swal.fire({
-        icon: 'success',
-        title: 'Google 登入成功！',
-        text: '正在跳轉...',
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-      })
-
-      // 強制等待2000毫秒
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      // 關閉 Swal
-      Swal.close()
-
-      // 使用 replace 並處理可能的錯誤
-      try {
-        await router.replace('/dashboard/ecommerce')
-      } catch (navError) {
-        // 如果路由跳轉失敗，使用硬跳轉
-        console.warn('路由跳轉失敗，使用硬跳轉', navError)
-        window.location.href = '/dashboard/ecommerce'
-      }
+      await completeLogin(userData, 'Google 登入成功！')
     } else {
       throw new Error(backendResponse.data?.message || '後端驗證失敗：未返回用戶資料')
     }

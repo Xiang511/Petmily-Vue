@@ -6,7 +6,7 @@ import FullScreenLayout from '@/components/Tailadmin/layout/FullScreenLayout.vue
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth' // 引入 store
 import { googleTokenLogin } from 'vue3-google-login'
-import Live2DPet from './Live2DPet.vue'
+import Live2DPet from '@/components/Client/Live2DPet.vue'
 import Swal from 'sweetalert2'
 
 // 表單欄位

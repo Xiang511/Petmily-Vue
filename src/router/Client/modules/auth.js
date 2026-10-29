@@ -7,7 +7,7 @@ export default [
       {
         path: '',
         name: 'Client-login',
-        component: () => import('@/components/Client/Signin.vue'),
+        component: () => import('@/components/Client/auth/Signin.vue'),
         meta: {
           title: '登入 | Petmily 寵物媒合平台',
         },
@@ -22,7 +22,7 @@ export default [
       {
         path: '',
         name: 'Client-signup',
-        component: () => import('@/components/Client/Signup.vue'),
+        component: () => import('@/components/Client/auth/Signup.vue'),
         meta: {
           title: '註冊 | Petmily 寵物媒合平台',
         },
@@ -37,7 +37,7 @@ export default [
       {
         path: '',
         name: 'Client-reset-password',
-        component: () => import('@/components/Client/ForgotPassword.vue'),
+        component: () => import('@/components/Client/auth/ForgotPassword.vue'),
         meta: {
           title: '忘記密碼 | Petmily 寵物媒合平台',
         },
@@ -52,7 +52,7 @@ export default [
       {
         path: '',
         name: 'Client-reset-password-confirm',
-        component: () => import('@/components/Client/ResetPasswordWithToken.vue'),
+        component: () => import('@/components/Client/auth/ResetPasswordWithToken.vue'),
         meta: {
           title: '設定新密碼 | Petmily 寵物媒合平台',
         },

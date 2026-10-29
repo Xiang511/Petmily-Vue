@@ -7,7 +7,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import vue3GoogleLogin, { googleSdkLoaded } from 'vue3-google-login'
 
 import App from './App.vue'
-import './assets/Tailadmin/main.css'
+import './assets/css/Tailadmin/main.css'
 import router from './router'
 import { googleOAuthConfig } from './config/google-oauth'
 

@@ -25,7 +25,7 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach(async (to, from) => {
   const authStore = useAuthStore()
 
   // 設置頁面標題
@@ -35,7 +35,9 @@ router.beforeEach((to, from) => {
 
   // 後台（/dashboard 開頭）需要登入；未登入才導向後台登入頁
   // 登入頁本身排除，避免導向後產生無限迴圈
+  // 登入狀態以後端 /Auth/me 的結果為準，這裡先等它確認完成
   if (to.path.startsWith('/dashboard') && to.path !== '/dashboard/login') {
+    await authStore.initAuth()
     if (!authStore.isLoggedIn) {
       console.log('後台未登入，跳轉到 /dashboard/login:', to.path)
       return '/dashboard/login'
@@ -58,6 +60,7 @@ router.beforeEach((to, from) => {
     to.path.startsWith('/game') ||
     to.path.startsWith('/healthpassport')
   ) {
+    await authStore.initAuth()
     if (!authStore.isLoggedIn) {
       // 前台需要認證但未登入，跳轉到前台登入頁
       console.log('未登入，從', to.path, '跳轉到 /login')

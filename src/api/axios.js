@@ -36,7 +36,8 @@ service.interceptors.response.use(
     console.log(' 請求失敗:', error.config?.url, error.response?.status)
 
     //  處理 401 Unauthorized - 未認證，跳轉到登入頁
-    if (error.response && error.response.status === 401) {
+    //  skipAuthRedirect：用於「確認是否已登入」的請求，未登入是正常結果，不需跳轉
+    if (error.response && error.response.status === 401 && !error.config?.skipAuthRedirect) {
       const authStore = useAuthStore()
       const currentPath = window.location.pathname
 

@@ -9,6 +9,7 @@ import vue3GoogleLogin, { googleSdkLoaded } from 'vue3-google-login'
 import App from './App.vue'
 import './assets/css/Tailadmin/main.css'
 import router from './router'
+import { useAuthStore } from './stores/auth'
 import { googleOAuthConfig } from './config/google-oauth'
 
 const pinia = createPinia()
@@ -32,5 +33,8 @@ googleSdkLoaded((google) => {
   google.accounts.id.cancel()
   google.accounts.id.disableAutoSelect()
 })
+
+// 向後端確認登入狀態（不阻擋畫面載入，需要登入的路由會在守衛中等待結果）
+useAuthStore(pinia).initAuth()
 
 app.mount('#app')

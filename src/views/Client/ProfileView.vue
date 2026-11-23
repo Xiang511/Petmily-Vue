@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import request from '@/api/axios'
 import { useProfileEdit } from '@/composables/Client/member/useProfileEdit'
 import { useGameStats } from '@/composables/Client/member/useGameStats'
 import { useMemberPets } from '@/composables/Client/member/useMemberPets'
@@ -19,7 +20,23 @@ import ProfileAccountSettings from '@/components/Client/member/ProfileAccountSet
 import ProfileEditModal from '@/components/Client/member/ProfileEditModal.vue'
 
 const authStore = useAuthStore()
-const user = computed(() => authStore.userInfo || {})
+
+// 登入狀態只保存 userId、name、photo；電話、城市等個資在進入此頁時才向後端取得，不存入 store
+const profile = ref({})
+const user = computed(() => ({ ...(authStore.userInfo || {}), ...profile.value }))
+
+const fetchProfile = async () => {
+  const userId = authStore.userInfo?.userId
+  if (!userId) return
+  try {
+    const res = await request.get(`/Users/${userId}`)
+    if (res.data?.success && res.data?.data) {
+      profile.value = res.data.data
+    }
+  } catch (e) {
+    console.warn('[fetchProfile] 無法取得完整個人資料', e)
+  }
+}
 
 const {
   editForm,
@@ -40,9 +57,15 @@ const { logout } = useLogout()
 const activeTab = ref('pets')
 
 onMounted(() => {
+  fetchProfile()
   fetchGameStats()
   fetchPets()
   fetchPosts()
+})
+
+// 編輯視窗關閉（儲存完成）後重新取得最新資料
+watch(isEditingProfile, (editing) => {
+  if (!editing) fetchProfile()
 })
 
 /**

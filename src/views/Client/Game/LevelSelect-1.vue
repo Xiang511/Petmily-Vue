@@ -72,7 +72,7 @@ const fetchGameQuestions = async () => {
   try {
     loading.value = true
     
-    // 📡 連接後端 7048 Port 網址，抓取「認養須知」分類題目
+    // 連接後端 7048 Port 網址，抓取「認養須知」分類題目
     const response = await axios.get('/Questions/game-level', {
       params: { category: '認養須知' }
     })
@@ -133,7 +133,7 @@ const runStartCountdown = () => {
   // 1. 一開始就播放完整的三秒倒數音效
   playSFX('countdown')
 
-  // 👈 修正：將 cd 改為 countdownInterval.value
+  // 修正：將 cd 改為 countdownInterval.value
   countdownInterval.value = setInterval(() => {
     if (!isPaused.value) {
       if (startCountdown.value > 1) {
@@ -236,9 +236,9 @@ const nextQuestion = () => {
     startTimer()
     isUserCorrect.value = false
   } else {
-    // --- 🌟 10 題全部答完了，觸發獨立結算視窗！ ---
+    // --- 10 題全部答完了，觸發獨立結算視窗！ ---
     
-    // 💡 註解或刪除原本的 if (timer) clearInterval(timer)，改用 try-catch 包裹
+    // 註解或刪除原本的 if (timer) clearInterval(timer)，改用 try-catch 包裹
     try {
       // 如果你的計時器變數叫其他名字，可以在這裡安全地清除它，就算失敗也不會卡死程式
       if (typeof timer !== 'undefined') {
@@ -248,12 +248,12 @@ const nextQuestion = () => {
       console.log('計時器清除跳過')
     }
 
-    // 🎯 核心：強制直接打開獨立結算視窗！
+    // 核心：強制直接打開獨立結算視窗！
     isResultOpen.value = true 
   }
 }
 
-// 💡 點擊「再次挑戰」時由主頁面執行的重置方法
+// 點擊「再次挑戰」時由主頁面執行的重置方法
 const handleRetry = () => {
   isResultOpen.value = false
   currentQuestionIndex.value = 0
@@ -263,7 +263,7 @@ const handleRetry = () => {
   startTimer()
 }
 
-// 💡 點擊「繼續探索」時返回選單
+// 點擊「繼續探索」時返回選單
 const handleContinue = () => {
   router.push({ name: 'Client-levelselect' })
 }

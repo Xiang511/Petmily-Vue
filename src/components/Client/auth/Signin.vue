@@ -172,7 +172,7 @@ const verifyCodeAndLogin = async () => {
       requestData.sessionId = firstStepResponse.value.sessionId
     }
 
-    console.log('📤 發送驗證碼驗證請求，參數:', requestData)
+    console.log('發送驗證碼驗證請求，參數:', requestData)
 
     const response = await request.post('/Auth/login/verify-code', requestData)
 
@@ -265,7 +265,7 @@ const resendVerificationCode = async () => {
  * Google 登入處理
  */
 const handleGoogleLogin = async () => {
-  console.log('🔵 [Google Login] 開始執行...')
+  console.log('[Google Login] 開始執行...')
   isGoogleLoading.value = true
 
   try {
@@ -281,7 +281,7 @@ const handleGoogleLogin = async () => {
 
     // 呼叫 googleTokenLogin 會取得 access_token
     const response = await googleTokenLogin()
-    console.log('🟢 [Google Login] 收到 Google 回應', response)
+    console.log('[Google Login] 收到 Google 回應', response)
 
     // 如果後端其實是要 access_token，請跟後端對齊欄位名稱
     // 這裡相容舊邏輯，優先抓取任何可能的 token 欄位
@@ -297,7 +297,7 @@ const handleGoogleLogin = async () => {
       idToken: token,
     })
 
-    console.log('🟢 [Google Login] 後端回應:', backendResponse.data)
+    console.log('[Google Login] 後端回應:', backendResponse.data)
 
     // 業務失敗會被攔截器轉成 reject，這裡只需確認有用戶資料
     const userData = backendResponse.data?.user
@@ -309,7 +309,7 @@ const handleGoogleLogin = async () => {
       // 等待 store 更新完成
       await nextTick()
 
-      console.log('✅ Google 登入成功，準備跳轉')
+      console.log('Google 登入成功，準備跳轉')
 
       // 顯示成功訊息，強制等待2秒
       Swal.fire({
@@ -341,11 +341,11 @@ const handleGoogleLogin = async () => {
       throw new Error('後端驗證失敗：未返回用戶資料')
     }
   } catch (error) {
-    console.error('🔴 [Google Login] 失敗:', error)
+    console.error('[Google Login] 失敗:', error)
     Swal.close()
 
     if (error.type === 'popup_closed' || error.message === 'popup_closed_by_user') {
-      console.log('ℹ️ [User] 使用者關閉了登入視窗')
+      console.log('[User] 使用者關閉了登入視窗')
     } else if (error.response) {
       Swal.fire({
         icon: 'error',

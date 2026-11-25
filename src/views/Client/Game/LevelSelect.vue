@@ -126,12 +126,12 @@ const generateLevelLayout = (startId) => {
   return Array.from({ length: 10 }, (_, i) => {
     const levelId = startId + i
     
-    // 🎯 2. 星星數邏輯：優先讀取後端資料庫歷史，如果沒有再看本地
+    // 2. 星星數邏輯：優先讀取後端資料庫歷史，如果沒有再看本地
     let currentStars = 0
     const serverRecord = apiGameHistory.value.find(h => h.gameId === levelId)
     
     if (serverRecord) {
-      // ✅ 修正：根據 receivedReward 推斷星星數
+      // 修正：根據 receivedReward 推斷星星數
       if (serverRecord.receivedReward === true) {
         currentStars = 3  // 全對
       } else if (serverRecord.stageClear === true) {
@@ -144,7 +144,7 @@ const generateLevelLayout = (startId) => {
       currentStars = (currentLevelData && typeof currentLevelData.stars !== 'undefined') ? currentLevelData.stars : 0
     }
 
-    // 🎯 3. 嚴格鎖定邏輯
+    // 3. 嚴格鎖定邏輯
     let isLocked = true 
 
     if (levelId === 1) {
@@ -156,7 +156,7 @@ const generateLevelLayout = (startId) => {
         isLocked = false
       }
     } else {
-      // 🎯 核心修正點：如果後端成功連線（不論有沒有資料，只要沒斷網）
+      // 核心修正點：如果後端成功連線（不論有沒有資料，只要沒斷網）
       if (isServerConnected.value) {
         const prevLevelRecord = apiGameHistory.value.find(h => h.gameId === levelId - 1)
         const isPrevCleared = prevLevelRecord && prevLevelRecord.stageClear === true
@@ -189,9 +189,9 @@ const generateLevelLayout = (startId) => {
   })
 }
 
-// 🎯 【關鍵修正】抽取大章節與關卡自動聚焦的決策邏輯
+// 【關鍵修正】抽取大章節與關卡自動聚焦的決策邏輯
 const determineAndFocusLevel = () => {
-  // 🎯 優先讀取網址參數，如果網址沒帶（如點暫停返回漏帶），就讀取剛才點擊關卡時留下的記憶
+  // 優先讀取網址參數，如果網址沒帶（如點暫停返回漏帶），就讀取剛才點擊關卡時留下的記憶
   const lastPlayedId = parseInt(route.query.lastPlayedLevelId) || parseInt(sessionStorage.getItem('last_selected_level_id'))
   let targetLevelId = null
 
@@ -203,12 +203,12 @@ const determineAndFocusLevel = () => {
     const currentRecord = apiGameHistory.value.find(h => h.gameId === lastPlayedId)
     const isCurrentCleared = currentRecord && currentRecord.stageClear === true
 
-    // 🎯 核心判定
+    // 核心判定
     if (savedLatestId && lastPlayedId === savedLatestId && isCurrentCleared && lastPlayedId < 30) {
-      targetLevelId = lastPlayedId + 1 // 🚀 只有「打最新關」且「通關成功」才前進下一關
+      targetLevelId = lastPlayedId + 1 // 只有「打最新關」且「通關成功」才前進下一關
       console.log(`[導航決策] 成功攻克最新關卡 ${lastPlayedId}，前進至第 ${targetLevelId} 關`)
     } else {
-      targetLevelId = lastPlayedId // ↩️ 玩舊關卡、中途暫停退出、未通關 -> 嚴格留在原本點擊的那一關
+      targetLevelId = lastPlayedId // 玩舊關卡、中途暫停退出、未通關 -> 嚴格留在原本點擊的那一關
       console.log(`[導航決策] 判定為複習舊關卡或中途退出，精準停留在原關卡: ${targetLevelId}`)
     }
 
@@ -254,10 +254,10 @@ const determineAndFocusLevel = () => {
     const isNextUnlockedByServer = (currentRecord && currentRecord.stageClear === true) || nextRecord
 
     if (isNextUnlockedByServer && nextLevelId <= 30) {
-      targetLevelId = nextLevelId // 🚀 通關了，解鎖新關卡 -> 預設選中新關卡！
+      targetLevelId = nextLevelId // 通關了，解鎖新關卡 -> 預設選中新關卡！
       console.log(`[導航決策] 檢測到關卡 ${lastPlayedId} 已通關，自動聚焦新解鎖關卡: ${nextLevelId}`)
     } else {
-      targetLevelId = lastPlayedId // ❌ 沒通關，或是最後一關 -> 留在原本那一關
+      targetLevelId = lastPlayedId // 沒通關，或是最後一關 -> 留在原本那一關
       console.log(`[導航決策] 留在原本挑戰的關卡: ${lastPlayedId}`)
     }
   }
@@ -269,7 +269,7 @@ const determineAndFocusLevel = () => {
     )
     
     if (targetAreaIndex !== -1 && targetAreaIndex !== currentAreaIndex.value) {
-      // 🚀 如果目標關卡在別的大章節，自動進行大章節翻頁切換
+      // 如果目標關卡在別的大章節，自動進行大章節翻頁切換
       currentAreaIndex.value = targetAreaIndex
       const startId = areas.value[currentAreaIndex.value].idRange[0]
       levels.value = generateLevelLayout(startId)
@@ -293,13 +293,13 @@ const updateAreaContent = async () => {
   loadingProgress.value = 0
   const playerStore = usePlayerStore()
   
-  // 🚀 【修改】從 store 取得動態 PlayerId
+  // 【修改】從 store 取得動態 PlayerId
   const playerId = playerStore.playerId
   
-  console.log('🎮 LevelSelect - 取得 PlayerId:', playerId)
+  console.log('LevelSelect - 取得 PlayerId:', playerId)
   
   if (!playerId) {
-    console.error('❌ PlayerId 不存在')
+    console.error('PlayerId 不存在')
     return
   }
   
@@ -309,7 +309,7 @@ const updateAreaContent = async () => {
     if (historyRes.data) {
       apiGameHistory.value = historyRes.data
       isServerConnected.value = true;
-      console.log('✅ 通關歷史已加載:', apiGameHistory.value.length, '筆')
+      console.log('通關歷史已加載:', apiGameHistory.value.length, '筆')
     }
 
     // B. 精準撲取玩家資料 - 【修改】使用動態 PlayerId
@@ -317,10 +317,10 @@ const updateAreaContent = async () => {
     if (playerRes.data) {
       const playerData = playerRes.data
       userPoints.value = playerData.currentPoint ?? 0
-      console.log('✅ [玩家資料同步成功] PlayerId:', playerId, ', 實時點數為:', userPoints.value)
+      console.log('[玩家資料同步成功] PlayerId:', playerId, ', 實時點數為:', userPoints.value)
     }
   } catch (error) {
-    console.error('❌ 後端連線失敗，切換為本地安全模式:', error)
+    console.error('後端連線失敗，切換為本地安全模式:', error)
     // 斷網時的備用防禦點數，避免顯示 0 嚇到玩家
     if (userPoints.value === 0) userPoints.value = 1200 
     isServerConnected.value = false;
@@ -330,12 +330,12 @@ const updateAreaContent = async () => {
   const startId = areas.value[currentAreaIndex.value].idRange[0]
   levels.value = generateLevelLayout(startId)
 
-  // 🎯 【核心修正點】在這裡執行選關決策，它會完美處理初次進入、返回原地、通關解鎖並兼顧自動翻大分頁
+  // 【核心修正點】在這裡執行選關決策，它會完美處理初次進入、返回原地、通關解鎖並兼顧自動翻大分頁
   determineAndFocusLevel()
 
   await nextTick()
   
-  console.log('🎮 LevelSelect - 渲染完成')
+  console.log('LevelSelect - 渲染完成')
   
   const levelListPanel = document.querySelector('.level-list-panel')
   if (levelListPanel) {
@@ -414,11 +414,11 @@ const selectLevel = (lvl) => {
   if (!lvl.locked) {
     selectedLevel.value = lvl
 
-    // 🎯【全時段鎖定】只要玩家點了這一關，我們就把當時地圖上最新解鎖的關卡 ID 記下來
+    // 【全時段鎖定】只要玩家點了這一關，我們就把當時地圖上最新解鎖的關卡 ID 記下來
     const mapLatestLevelId = Math.max(...levels.value.filter(l => !l.locked).map(l => l.id))
     sessionStorage.setItem('before_game_latest_level_id', mapLatestLevelId.toString())
     
-    // 🎯 同時把玩家現在選的這關 ID 也存起來當作最強防線
+    // 同時把玩家現在選的這關 ID 也存起來當作最強防線
     sessionStorage.setItem('last_selected_level_id', lvl.id.toString())
     
     console.log(`[地圖記憶] 玩家選中第 ${lvl.id} 關。當時地圖最新解鎖為: 第 ${mapLatestLevelId} 關`)
@@ -438,7 +438,7 @@ const startGame = () => {
     const levelId = selectedLevel.value.id
     const categoryName = levelCategoryMap[levelId] || '認養須知'
 
-    // 🎯【新增鎖定邏輯】找出在進攻這一關之前，地圖上最新解鎖（也就是最大 ID）的關卡是哪一關
+    // 【新增鎖定邏輯】找出在進攻這一關之前，地圖上最新解鎖（也就是最大 ID）的關卡是哪一關
     // 這樣能百分之百防呆，不受後端回傳更新陣列的干擾
     const mapLatestLevelId = Math.max(...levels.value.filter(l => !l.locked).map(l => l.id))
     sessionStorage.setItem('before_game_latest_level_id', mapLatestLevelId.toString())
@@ -613,7 +613,7 @@ const goBack = () => router.push({ name: 'Client-mainmenu' })
   flex: 1.6;
   background-color: #f6ebe0; 
   
-  /* 🎯 點矩陣魔法：利用極小的圓形與錯位 */
+  /* 點矩陣魔法：利用極小的圓形與錯位 */
   background-image: 
     radial-gradient(#e5d5c5 10%, transparent 11%),
     radial-gradient(#e5d5c5 10%, transparent 11%);
@@ -763,7 +763,7 @@ const goBack = () => router.push({ name: 'Client-mainmenu' })
   height: 100%;
   background-color: #f6ebe0; 
   
-  /* 🎯 點矩陣魔法：利用極小的圓形與錯位 */
+  /* 點矩陣魔法：利用極小的圓形與錯位 */
   background-image: 
     radial-gradient(#e5d5c5 10%, transparent 11%),
     radial-gradient(#e5d5c5 10%, transparent 11%);

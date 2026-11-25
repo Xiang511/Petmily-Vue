@@ -19,7 +19,7 @@ const loadScript = (url) => {
 
 onMounted(async () => {
   try {
-    // 🌟 仿照 NotionNext：動態引入網頁最穩定的經典版 Live2D 核心
+    // 仿照 NotionNext：動態引入網頁最穩定的經典版 Live2D 核心
     // 這個核心內部自帶滑鼠全域追蹤，且完全不依賴 Pixi.js，徹底根除 manager.on 錯誤！
     await loadScript('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget/live2d.min.js')
 

@@ -64,10 +64,10 @@ const fetchData = async () => {
     const playerStore = usePlayerStore()
     const playerId = playerStore.playerId
     
-    console.log('🎮 SkinShop - 取得 PlayerId:', playerId)
+    console.log('SkinShop - 取得 PlayerId:', playerId)
     
     if (!playerId) {
-      console.error('❌ PlayerId 不存在')
+      console.error('PlayerId 不存在')
       return
     }
     
@@ -488,10 +488,10 @@ const goBack = () => {
    =================================================== */
 .shop-page-container {
   min-height: 100vh;
-  /* 🎯 基礎低飽和度 Morandi 溫暖底色 */
+  /* 基礎低飽和度 Morandi 溫暖底色 */
   background-color: #f7ede2; 
   
-  /* 🎯 純 CSS 網格微斜紋魔法：利用線性漸層疊加 */
+  /* 純 CSS 網格微斜紋魔法：利用線性漸層疊加 */
   background-image: 
     linear-gradient(45deg, #efe3d3 25%, transparent 25%, transparent 75%, #efe3d3 75%, #efe3d3),
     linear-gradient(45deg, #efe3d3 25%, transparent 25%, transparent 75%, #efe3d3 75%, #efe3d3);
@@ -540,7 +540,7 @@ const goBack = () => {
   font-weight: bold;
 }
 
-/* 🔙 返回按鈕 */
+/* 返回按鈕 */
 .back-btn {
   width: 55px;
   height: 55px;
@@ -575,7 +575,7 @@ const goBack = () => {
   transform: translateY(-2px);
 }
 
-/* 💡 右側組合框 */
+/* 右側組合框 */
 .header-right-group {
   display: flex;
   align-items: center;
@@ -611,14 +611,14 @@ const goBack = () => {
 }
 
 .loading-state {
-  /* 🎯 1. 核心定位：固定定位，死死鎖定整個瀏覽器視窗 */
+  /* 1. 核心定位：固定定位，死死鎖定整個瀏覽器視窗 */
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;   /* 撐滿整個螢幕寬度 */
   height: 100vh;  /* 撐滿整個螢幕高度 */
   
-  /* 🎯 2. 核心布局：讓內部的大圈圈與文字上下垂直排列，並精準幾何居中 */
+  /* 2. 核心布局：讓內部的大圈圈與文字上下垂直排列，並精準幾何居中 */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -626,7 +626,7 @@ const goBack = () => {
   text-align: center;
   gap: 30px;      /* 圈圈與文字的間距 */
   
-  /* 🎯 3. 層級鎖定：確保加載畫面絕對蓋在最上層（不被商店其他卡片遮擋） */
+  /* 3. 層級鎖定：確保加載畫面絕對蓋在最上層（不被商店其他卡片遮擋） */
   z-index: 9999;
   
   /* ===================================================
@@ -856,7 +856,7 @@ const goBack = () => {
   cursor: pointer;
   user-select: none;
 
-  /* 🎯 預設狀態（熄滅）：完美同步右側點數框的溫暖米底色 */
+  /* 預設狀態（熄滅）：完美同步右側點數框的溫暖米底色 */
   background: #fcf4e5;       
   height: 60px;
   padding: 8px 18px;        
@@ -870,7 +870,7 @@ const goBack = () => {
               background-color 0.15s ease;
 }
 
-/* 📝 標籤文字（預設深色） */
+/* 標籤文字（預設深色） */
 .checkbox-text,
 .icon-wrapper {
   color: #453a27; 
@@ -886,7 +886,7 @@ const goBack = () => {
   align-items: center;
 }
 
-/* 🎯 核心魔法：讓 SVG 圖標強制繼承父層的文字顏色 (currentColor) */
+/* 核心魔法：讓 SVG 圖標強制繼承父層的文字顏色 (currentColor) */
 .icon-wrapper svg {
   display: block;
   color: currentColor; 
@@ -955,15 +955,15 @@ const goBack = () => {
 }
 
 .product-card:active {
-  /* 🎯 點下去時往下平移：相對於 hover 的 translateY(-4px)，
+  /* 點下去時往下平移：相對於 hover 的 translateY(-4px)，
      我們讓它沉降到比平常更低的微幅平移，製造按下去的物理動態 */
   transform: translateY(2px);
   
-  /* 🎯 縮小陰影：原本是 6px 的厚重立體陰影，點擊時縮小到 2px，
+  /* 縮小陰影：原本是 6px 的厚重立體陰影，點擊時縮小到 2px，
      這樣在視覺上卡片就會像是緊貼著底層桌面 */
   box-shadow: 0 2px 0 #453a27;
   
-  /* 🎯 加快反應速度：點下去的瞬間要瞬間反饋（0.05秒），按鈕感覺才會「彈手」 */
+  /* 加快反應速度：點下去的瞬間要瞬間反饋（0.05秒），按鈕感覺才會「彈手」 */
   transition: transform 0.05s ease-out, box-shadow 0.05s ease-out;
 }
 
@@ -1000,12 +1000,12 @@ const goBack = () => {
   height: 80px;
   background-color: #f7ede2; 
   
-  /* 🎯 精細雙向交織線：創造軟綿綿的微像素編織感 */
+  /* 精細雙向交織線：創造軟綿綿的微像素編織感 */
   background-image: 
     linear-gradient(90deg, rgba(234, 221, 206, 0.7) 1px, transparent 1px),
     linear-gradient(0deg, rgba(234, 221, 206, 0.7) 1px, transparent 1px);
   
-  /* ⚡ 關鍵：縮小到 20px，讓它變成低調精緻的背景底紋 */
+  /* 關鍵：縮小到 20px，讓它變成低調精緻的背景底紋 */
   background-size: 10px 10px;
   border: 3px solid #453a27;
   border-radius: 12px;
@@ -1063,15 +1063,15 @@ const goBack = () => {
    =================================================== */
 .custom-tooltip {
   position: fixed;
-  /* 🎯 背景換成米色，維持 Morandi 質感 */
+  /* 背景換成米色，維持 Morandi 質感 */
   background: #fdf6e6;
-  /* 🎯 加上核心的深色粗邊框 */
+  /* 加上核心的深色粗邊框 */
   border: 4px solid #453a27;
-  /* 🎯 調整為更貼合整體的圓角 */
+  /* 調整為更貼合整體的圓角 */
   border-radius: 18px;
-  /* 🎯 文字顏色換回深色 */
+  /* 文字顏色換回深色 */
   color: #453a27;
-  /* 🎯 文字對齊左側 */
+  /* 文字對齊左側 */
   text-align: left;
   /* 調整內邊距 */
   padding: 15px 20px;
@@ -1079,9 +1079,9 @@ const goBack = () => {
   z-index: 10000;
   pointer-events: none;
   max-width: 250px;
-  /* 🎯 修改陰影，使其與商品卡片的懸浮陰影一致 */
+  /* 修改陰影，使其與商品卡片的懸浮陰影一致 */
   box-shadow: 0 8px 0 #453a27;
-  /* ✨ 加上滑動出現的動畫特效 ( Anime.js style transition ) */
+  /* 加上滑動出現的動畫特效 ( Anime.js style transition ) */
   animation: tooltip-slide-up 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 

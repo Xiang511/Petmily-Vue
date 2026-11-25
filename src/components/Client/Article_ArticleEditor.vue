@@ -306,7 +306,7 @@ defineExpose({
         發佈貼文
       </Article_BaseButton>
 
-      <!-- 💡 拆分出去的子元件彈窗 -->
+      <!-- 拆分出去的子元件彈窗 -->
       <NewArticleModal
         v-model="isNewArticleModalOpen"
         @discard="discardAndNew"

@@ -5,7 +5,7 @@ import { Icon } from '@iconify/vue'
 
 const isModalOpen = ref(false)
 
-// 💡 修正：這裡改成改變 isModalOpen
+// 修正：這裡改成改變 isModalOpen
 defineExpose({
   openChat: () => {
     isModalOpen.value = true

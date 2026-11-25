@@ -38,20 +38,20 @@ const isVictory = computed(() => {
 const playerStore = usePlayerStore()
 const playerName = computed(() => playerStore.playerName || '玩家')
 
-// 🚀 核心優化：當結算視窗打開時，自動發送結果給後端 API 儲存
+// 核心優化：當結算視窗打開時，自動發送結果給後端 API 儲存
 watch(
   () => props.isOpen,
   async (newVal) => {
     if (newVal === true) {
-      // 🎯 執行後端联網儲存與解鎖
+      // 執行後端联網儲存與解鎖
       try {
         const playerStore = usePlayerStore()
         const playerId = playerStore.playerId
 
-        console.log('🎮 LevelResultModal - 取得 PlayerId:', playerId)
+        console.log('LevelResultModal - 取得 PlayerId:', playerId)
 
         if (!playerId) {
-          console.error('❌ PlayerId 不存在')
+          console.error('PlayerId 不存在')
           return
         }
 
@@ -62,20 +62,20 @@ watch(
           BonusPoints: bonusPoints.value, // 答對 10 題給 10 點，其餘 0 點
         }
 
-        console.log('🚀 [API 傳送] 正在同步關卡進度至後端...', submitData)
+        console.log('[API 傳送] 正在同步關卡進度至後端...', submitData)
 
         await request.post('/Player/save-game-result', submitData)
 
         // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
-        console.log('🎉 [API 成功] 後端已成功記錄進度，資料庫與點數已更新！')
+        console.log('[API 成功] 後端已成功記錄進度，資料庫與點數已更新！')
       } catch (error) {
-        console.error('❌ [API 失敗] 傳送遊戲結果失敗，後端服務可能未啟動或報錯：', error)
+        console.error('[API 失敗] 傳送遊戲結果失敗，後端服務可能未啟動或報錯：', error)
       }
 
-      // 💾 離線本地防線（保留作為備用）
+      // 離線本地防線（保留作為備用）
       saveProgressAndUnlockLocalStorage()
 
-      // 🎬 播放彈窗動畫
+      // 播放彈窗動畫
       await nextTick()
       playModalAnimations()
     }
@@ -105,7 +105,7 @@ const saveProgressAndUnlockLocalStorage = () => {
   localStorage.setItem('game_progress', JSON.stringify(progress))
 }
 
-// 🎬 結算彈窗 Anime.js 動畫控制
+// 結算彈窗 Anime.js 動畫控制
 const playModalAnimations = () => {
   animate('.result-modal-overlay', {
     opacity: [0, 1],
@@ -275,7 +275,7 @@ const playModalAnimations = () => {
   font-size: 0.9rem;
 }
 
-/* ⭐ SVG 星星美化 */
+/* SVG 星星美化 */
 .stars-row {
   display: flex;
   justify-content: center;
@@ -301,7 +301,7 @@ const playModalAnimations = () => {
   stroke: #453a27; /* 經典粗邊框 */
 }
 
-/* 📊 數據面板 */
+/* 數據面板 */
 .result-stats {
   background: #ffffff;
   border: 4px solid #453a27;
@@ -333,7 +333,7 @@ const playModalAnimations = () => {
   color: #e4987e; /* 主橘色 */
 }
 
-/* 🔙 按鈕控制 */
+/* 按鈕控制 */
 .result-footer {
   display: flex;
   gap: 15px;

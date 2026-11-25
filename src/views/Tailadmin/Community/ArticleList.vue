@@ -64,7 +64,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-          <!-- 💡 這裡統一使用小寫 article 變數名，避免混淆 -->
+          <!-- 這裡統一使用小寫 article 變數名，避免混淆 -->
           <tr
             v-for="article in Articles"
             :key="article.articleId || article.articleid"

@@ -615,7 +615,7 @@ const startClose = (type) => {
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
   background-color: #f5eae0; 
   
-  /* 🎯 純 CSS 人字波浪拼貼 */
+  /* 純 CSS 人字波浪拼貼 */
   background-image: 
     linear-gradient(135deg, #e9dacb 25%, transparent 25%), 
     linear-gradient(225deg, #e9dacb 25%, transparent 25%), 
@@ -886,7 +886,7 @@ const startClose = (type) => {
   animation: spin 1.2s linear infinite; /* 稍微放慢一點點點，轉起來更沉穩優雅 */
 }
 
-/* 🎯 提示文字微調，消除預設邊距 */
+/* 提示文字微調，消除預設邊距 */
 .loading-text {
   font-size: 1.75rem;
   position: absolute;
@@ -901,7 +901,7 @@ const startClose = (type) => {
   letter-spacing: 0.5px;
 }
 
-/* 🎯 旋轉動畫定義（如果你的 CSS 最底下本來就有 @keyframes spin 就可以不用重複貼） */
+/* 旋轉動畫定義（如果你的 CSS 最底下本來就有 @keyframes spin 就可以不用重複貼） */
 @keyframes spin {
   to {
     transform: rotate(360deg);

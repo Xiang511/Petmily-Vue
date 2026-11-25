@@ -48,16 +48,16 @@ const initializePlayerFromAuth = async () => {
     const success = await playerStore.initializePlayer()
 
     if (success) {
-      console.log('✅ 玩家資料初始化成功')
+      console.log('玩家資料初始化成功')
       showAudioModal.value = !hasPromptedAudio.value
       return true
     } else {
       initError.value = playerStore.error || '無法初始化玩家資料'
-      console.error('❌ 玩家初始化失敗:', initError.value)
+      console.error('玩家初始化失敗:', initError.value)
       return false
     }
   } catch (error) {
-    console.error('❌ 初始化過程出錯:', error)
+    console.error('初始化過程出錯:', error)
     initError.value = '初始化過程出錯，請重試'
     return false
   } finally {
@@ -186,7 +186,7 @@ const backToWebHome = (event) => {
   height: 100vh;
   background-color: #f7ede2; 
   
-  /* 🎯 純 CSS 網格微斜紋魔法：利用線性漸層疊加 */
+  /* 純 CSS 網格微斜紋魔法：利用線性漸層疊加 */
   background-image: url("/images/game/GameViewBG.png");
   /* 調整格子的大小（數字越小格子越密） */
   background-position:center;
@@ -246,7 +246,7 @@ const backToWebHome = (event) => {
   justify-content: center;
   user-select: none;
   
-  /* 🎯 2. 核心第一層框：最貼近文字的深咖啡色粗邊 (10px) */
+  /* 2. 核心第一層框：最貼近文字的深咖啡色粗邊 (10px) */
   -webkit-text-stroke: 15px #453a27;
   paint-order: stroke fill;        /* 確保粗邊乖乖往外生長，絕不吃進文字內裏 */
   
@@ -259,7 +259,7 @@ const backToWebHome = (event) => {
   filter: 
     drop-shadow(0px 6px 0px #ffe2af)
     
-    /* 🤍 第二步：在鵝黃色外再包上最後一圈 6px 的乾淨純白外邊 */
+    /* 第二步：在鵝黃色外再包上最後一圈 6px 的乾淨純白外邊 */
     drop-shadow(6px 0px 0px #ffffff)
     drop-shadow(-6px 0px 0px #ffffff)
     drop-shadow(0px 6px 0px #ffffff)

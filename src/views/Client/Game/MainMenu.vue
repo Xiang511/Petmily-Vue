@@ -42,10 +42,10 @@ const fetchPlayerData = async () => {
     // 【修改】從 store 取得 userId
     const userId = playerStore.userId
 
-    console.log('🎮 MainMenu - 取得 userId:', userId)
+    console.log('MainMenu - 取得 userId:', userId)
 
     if (!userId) {
-      console.log('❌ userId 不存在')
+      console.log('userId 不存在')
       playerName.value = '玩家'
       return
     }
@@ -53,23 +53,23 @@ const fetchPlayerData = async () => {
     // 【修改】使用 request 呼叫 API（改為 request 以支援 header 設定）
     const response = await request.get(`/users/${userId}/player-profile`)
 
-    console.log('📡 API 回應:', response.data)
+    console.log('API 回應:', response.data)
 
     if (response.data) {
       playerData.value = response.data
       playerName.value = response.data.userName || '玩家'
-      console.log('✅ 玩家名稱已更新:', playerName.value)
+      console.log('玩家名稱已更新:', playerName.value)
     // 【新增】檢查是否為新玩家（UserName 為空）
       if (!response.data.userName || response.data.userName.trim() === '') {
-        console.log('🆕 檢測到新玩家，顯示暱稱設定 Modal')
+        console.log('檢測到新玩家，顯示暱稱設定 Modal')
         showNicknameModal.value = true
       }
     } else {
-      console.log('⚠️ API 回應失敗:', response.data)
+      console.log('API 回應失敗:', response.data)
       playerName.value = '玩家'
     }
   } catch (error) {
-    console.error('❌ 獲取玩家資料失敗:', error)
+    console.error('獲取玩家資料失敗:', error)
     playerName.value = '玩家'
   } finally {
     isLoadingPlayer.value = false
@@ -167,7 +167,7 @@ const submitNickname = async () => {
       return
     }
 
-    console.log('📤 提交新暱稱:', newNickname.value, '| PlayerId:', playerId)
+    console.log('提交新暱稱:', newNickname.value, '| PlayerId:', playerId)
 
     // 呼叫 PUT /api/Player/{playerId} 更新暱稱
     const response = await request.put(
@@ -181,10 +181,10 @@ const submitNickname = async () => {
       }
     )
 
-    console.log('📡 API 回應:', response.data)
+    console.log('API 回應:', response.data)
 
     // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
-    console.log('✅ 暱稱設定成功')
+    console.log('暱稱設定成功')
     // 更新本地狀態
     playerName.value = newNickname.value.trim()
     // 更新 Pinia store
@@ -193,7 +193,7 @@ const submitNickname = async () => {
     showNicknameModal.value = false
     newNickname.value = ''
   } catch (error) {
-    console.error('❌ 提交暱稱失敗:', error)
+    console.error('提交暱稱失敗:', error)
     alert(error.message || '暱稱設定失敗，請稍後重試')
   } finally {
     isSubmittingNickname.value = false
@@ -204,7 +204,7 @@ const submitNickname = async () => {
 const closeNicknameModal = () => {
   // 不允許關閉，必須設定暱稱才能繼續
   // 可選：顯示提示訊息
-  console.log('⚠️ 新玩家必須設定暱稱才能繼續')
+  console.log('新玩家必須設定暱稱才能繼續')
 }
 </script>
 
@@ -425,10 +425,10 @@ button:hover,
   z-index: 10;
   border: 4px solid #453a27;
 
-  /* 💡 預設初始陰影：6px */
+  /* 預設初始陰影：6px */
   box-shadow: 0 6px 0 #453a27;
 
-  /* 💡 關鍵 1：固定底部支點，讓垂直縮放彈跳時有踩在地面上的扎實感 */
+  /* 關鍵 1：固定底部支點，讓垂直縮放彈跳時有踩在地面上的扎實感 */
   transform-origin: bottom;
 
   /* 帶有強烈彈性的果凍曲線 */
@@ -456,7 +456,7 @@ button:hover,
 
   opacity: 0;
   transform: translateY(6px) scale(0);
-  /* 💡 關鍵 2：耳朵支點鎖在底部，完美繼承按鈕頂部的壓扁動態 */
+  /* 關鍵 2：耳朵支點鎖在底部，完美繼承按鈕頂部的壓扁動態 */
   transform-origin: bottom;
 
   /* 帶有強烈彈性的果凍曲線 */
@@ -493,7 +493,7 @@ button:hover,
   background-color: #fcf4e5; /* 對齊 nav-item 移入變米色 */
   color: #453a27;
 
-  /* 💡 核心變形：
+  /* 核心變形：
       - translateX(-40px): 滿足你想要的改為【往左滑動】40px！
       - translateY(-4px): 稍微飄浮起來
       - scaleY(1.08): 只有垂直方向拉長，產生啵一聲的彈跳感
@@ -521,7 +521,7 @@ button:hover,
    💥 Active 點擊互動：維持向左位移 + 壓扁 + 解決陰影閃爍
    =================================================== */
 .user-profile-trigger:active {
-  /* 💡 點擊時，維持在左邊（translateX(-40px)），垂直壓扁到 0.88，陰影縮短到 2px */
+  /* 點擊時，維持在左邊（translateX(-40px)），垂直壓扁到 0.88，陰影縮短到 2px */
   transform: translateY(4px) scaleY(0.88) scaleX(1) !important;
   box-shadow: 0 2px 0 #453a27 !important;
 
@@ -532,7 +532,7 @@ button:hover,
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* 💡 耳朵在按鈕壓扁時，同步進行微幅壓扁，絕不閃爍與下陷 */
+/* 耳朵在按鈕壓扁時，同步進行微幅壓扁，絕不閃爍與下陷 */
 .user-profile-trigger:active::after {
   opacity: 1;
   transform: translateY(0) scaleY(0.85) scaleX(1);
@@ -601,7 +601,7 @@ button:hover,
   border-radius: 20px;
   box-shadow: 0 6px 0 #453a27;
 
-  /* 💡 關鍵 1：固定底部支點，讓垂直縮放彈跳時有踩在地面上的扎實感 */
+  /* 關鍵 1：固定底部支點，讓垂直縮放彈跳時有踩在地面上的扎實感 */
   transform-origin: bottom;
 
   /* 帶有強烈彈性的果凍曲線 */
@@ -629,7 +629,7 @@ button:hover,
 
   opacity: 0;
   transform: translateY(6px) scale(0);
-  /* 💡 關鍵 2：耳朵的支點也鎖在底部，這樣它會完美繼承按鈕頂部的震動，絕不陷進去 */
+  /* 關鍵 2：耳朵的支點也鎖在底部，這樣它會完美繼承按鈕頂部的震動，絕不陷進去 */
   transform-origin: bottom center;
   transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: -1;
@@ -662,7 +662,7 @@ button:hover,
   background-color: #fcf4e5;
   color: #453a27;
 
-  /* 💡 核心融合：
+  /* 核心融合：
      - translateX(40px): 滿足你想要的大幅往右滑動
      - translateY(-4px): 稍微飄浮起來
      - scaleY(1.08): 只有垂直方向拉長，產生啵一聲的彈跳感！
@@ -697,13 +697,13 @@ button:hover,
    💥 Active 點擊互動：整體下沉 + 耳朵精確微壓
    =================================================== */
 .nav-item:active {
-  /* 💡 點擊時，按鈕寬度不變形（scaleX(1)），但垂直壓扁到 0.88，營造極強點擊打擊感 */
+  /* 點擊時，按鈕寬度不變形（scaleX(1)），但垂直壓扁到 0.88，營造極強點擊打擊感 */
   transform: translateX(40px) translateY(4px) scaleY(0.88) scaleX(1);
   box-shadow: 0 2px 0 #453a27;
   transition: all 0.05s ease;
 }
 
-/* 💡 因為按鈕用了 scaleY 壓扁，且耳朵的定位鎖在頂部天花板，
+/* 因為按鈕用了 scaleY 壓扁，且耳朵的定位鎖在頂部天花板，
    現在耳朵只要同步進行微幅壓扁 scaleY(0.85)，
    視覺上就會呈現完美的「跟著按鈕一起往下壓低、微微收起耳朵」的精緻動態，完全不穿幫！ */
 .nav-item:active::after {

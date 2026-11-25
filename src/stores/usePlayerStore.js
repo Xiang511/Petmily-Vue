@@ -34,7 +34,7 @@ export const usePlayerStore = defineStore(
         isLoading.value = true
         error.value = null
 
-        console.log(`🔄 正在初始化玩家資料... UserId: ${currentUserId}`)
+        console.log(`正在初始化玩家資料... UserId: ${currentUserId}`)
 
         const response = await request.get(`/users/${currentUserId}/player-profile`)
 
@@ -53,7 +53,7 @@ export const usePlayerStore = defineStore(
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : '初始化玩家資料失敗'
         error.value = errorMsg
-        console.error('❌ 玩家初始化失敗:', err)
+        console.error('玩家初始化失敗:', err)
         playerId.value = null
         playerData.value = null
         return false
@@ -81,12 +81,12 @@ export const usePlayerStore = defineStore(
         if (playerData.value) {
           playerData.value.userName = newName
         }
-        console.log('✅ 玩家名稱更新成功')
+        console.log('玩家名稱更新成功')
         return true
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : '更新玩家名稱失敗'
         error.value = errorMsg
-        console.error('❌ 更新玩家名稱失敗:', err)
+        console.error('更新玩家名稱失敗:', err)
         return false
       } finally {
         isLoading.value = false
@@ -96,14 +96,14 @@ export const usePlayerStore = defineStore(
     const updatePlayerPoints = (points) => {
       if (playerData.value) {
         playerData.value.currentPoint = points
-        console.log(`💰 玩家點數已更新: ${points}`)
+        console.log(`玩家點數已更新: ${points}`)
       }
     }
 
     const updateEnabledSkinId = (skinId) => {
       if (playerData.value) {
         playerData.value.enabledSkinId = skinId
-        console.log(`🎨 裝備造型已更新: ${skinId}`)
+        console.log(`裝備造型已更新: ${skinId}`)
       }
     }
 
@@ -119,7 +119,7 @@ export const usePlayerStore = defineStore(
       playerId.value = null
       playerData.value = null
       error.value = null
-      console.log('🚪 玩家資料已清除')
+      console.log('玩家資料已清除')
     }
 
     return {
@@ -146,7 +146,7 @@ export const usePlayerStore = defineStore(
     }
   },
   {
-    // 🎯 加入這一行設定即可開啟持久化
+    // 加入這一行設定即可開啟持久化
     persist: {
       storage: localStorage, // 預設就是 localStorage
     },

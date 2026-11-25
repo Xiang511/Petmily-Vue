@@ -220,10 +220,10 @@ const handleAnswer = (choice, event) => {
   if (correct) {
     playSFX('success') // 播放成功音效 (對應你 useGameAudio 裡的 key)
     userScore.value++
-    console.log('✅ 答對！目前分數：', userScore.value)
+    console.log('答對！目前分數：', userScore.value)
   } else {
     playSFX('fail') // 播放失敗音效 (對應你 useGameAudio 裡的 key)
-    console.log('❌ 答錯！目前分數：', userScore.value)
+    console.log('答錯！目前分數：', userScore.value)
   }
   createStars(event, correct)
   showExplanation.value = true
@@ -299,7 +299,7 @@ const nextQuestion = () => {
     startTimer()
     isUserCorrect.value = false
   } else {
-    // --- 🌟 10 題全部答完了，安全關閉計時器，觸發獨立結算視窗！ ---
+    // --- 10 題全部答完了，安全關閉計時器，觸發獨立結算視窗！ ---
     if (timerInterval.value) {
       clearInterval(timerInterval.value)
       timerInterval.value = null
@@ -309,7 +309,7 @@ const nextQuestion = () => {
   }
 }
 
-// 💡 點擊「再次挑戰」時由主頁面執行的重置方法
+// 點擊「再次挑戰」時由主頁面執行的重置方法
 const handleRetry = () => {
   isResultOpen.value = false
   currentQuestionIndex.value = 0
@@ -319,7 +319,7 @@ const handleRetry = () => {
   startTimer()
 }
 
-// 💡 點擊「繼續探索」時返回選單
+// 點擊「繼續探索」時返回選單
 const handleContinue = () => {
   router.push({ name: 'Client-levelselect' })
 }
@@ -330,7 +330,7 @@ const handleNextLevel = () => {
 
   const currentCat = route.params.category
 
-  // 🎯 根據當前關卡，決定「下一關」要送他去哪裡
+  // 根據當前關卡，決定「下一關」要送他去哪裡
   if (currentCat === '認養須知') {
     router.push({ name: 'Client-gameplay', params: { category: '狗狗百科' } })
   } else if (currentCat === '狗狗百科') {
@@ -841,7 +841,7 @@ cursor: url('/images/game/pointer.png') 16 16, auto !important;
   height: 100vh;
    background-color: #f6ebe0; 
   
-  /* 🎯 點矩陣魔法：利用極小的圓形與錯位 */
+  /* 點矩陣魔法：利用極小的圓形與錯位 */
   background-image: 
     radial-gradient(#e5d5c5 10%, transparent 11%),
     radial-gradient(#e5d5c5 10%, transparent 11%);

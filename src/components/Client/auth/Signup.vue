@@ -243,7 +243,7 @@ const handleSubmit = async () => {
  * Google 註冊處理
  */
 const handleGoogleSignUp = async () => {
-  console.log('🔵 [Google SignUp] 開始執行...')
+  console.log('[Google SignUp] 開始執行...')
   isGoogleLoading.value = true
 
   try {
@@ -258,7 +258,7 @@ const handleGoogleSignUp = async () => {
     })
 
     const response = await googleTokenLogin()
-    console.log('🟢 [Google SignUp] 收到 Google 回應', response)
+    console.log('[Google SignUp] 收到 Google 回應', response)
 
     const token =
       response.credential || response.id_token || response.idToken || response.access_token
@@ -272,7 +272,7 @@ const handleGoogleSignUp = async () => {
       idToken: token,
     })
 
-    console.log('🟢 [Google SignUp] 後端回應:', backendResponse.data)
+    console.log('[Google SignUp] 後端回應:', backendResponse.data)
 
     // 業務失敗已由攔截器轉成 reject，這裡只需確認有用戶資料
     const userData = backendResponse.data?.user
@@ -286,7 +286,7 @@ const handleGoogleSignUp = async () => {
 
       await nextTick()
 
-      console.log('✅ Google 註冊/登入成功，準備跳轉')
+      console.log('Google 註冊/登入成功，準備跳轉')
 
       // 顯示成功訊息
       await Swal.fire({
@@ -307,11 +307,11 @@ const handleGoogleSignUp = async () => {
       throw new Error('後端驗證失敗：未返回用戶資料')
     }
   } catch (error) {
-    console.error('🔴 [Google SignUp] 失敗:', error)
+    console.error('[Google SignUp] 失敗:', error)
     Swal.close()
 
     if (error.type === 'popup_closed' || error.message === 'popup_closed_by_user') {
-      console.log('ℹ️ [User] 使用者關閉了登入視窗')
+      console.log('[User] 使用者關閉了登入視窗')
     } else if (error.response) {
       Swal.fire({
         icon: 'error',

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
 
 // 封裝一個動態載入 JS 的工具函式
 const loadScript = (url) => {
@@ -17,7 +17,13 @@ const loadScript = (url) => {
   })
 }
 
-onMounted(async () => {
+// 只在電腦版（lg: 1024px 以上）顯示，手機與平板不顯示也不載入 Live2D 腳本
+const desktopQuery = window.matchMedia('(min-width: 1024px)')
+let initialized = false
+
+const initLive2D = async () => {
+  if (initialized) return
+  initialized = true
   try {
     // 仿照 NotionNext：動態引入網頁最穩定的經典版 Live2D 核心
     // 這個核心內部自帶滑鼠全域追蹤，且完全不依賴 Pixi.js，徹底根除 manager.on 錯誤！
@@ -35,11 +41,25 @@ onMounted(async () => {
   } catch (error) {
     console.error('Live2D 動態腳本載入失敗:', error)
   }
+}
+
+// 視窗從小螢幕放大到電腦版時，才補做初始化
+const handleQueryChange = (e) => {
+  if (e.matches) initLive2D()
+}
+
+onMounted(() => {
+  if (desktopQuery.matches) initLive2D()
+  desktopQuery.addEventListener('change', handleQueryChange)
+})
+
+onBeforeUnmount(() => {
+  desktopQuery.removeEventListener('change', handleQueryChange)
 })
 </script>
 
 <template>
-  <div class="pet-container">
+  <div class="pet-container hidden lg:block">
     <!-- 經典版方案只需要一個固定的 canvas 標籤與對應的 ID -->
     <canvas id="live2d" width="250" height="350"></canvas>
   </div>

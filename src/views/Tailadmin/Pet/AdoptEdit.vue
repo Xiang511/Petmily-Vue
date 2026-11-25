@@ -43,10 +43,9 @@ const formatDateForInput = (dateString) => {
 const fetchAdoptionData = async () => {
   try {
     const response = await request.get(`/AdoptionRecord/${adoptionId}`)
-    const result = response.data
+    const data = response.data
 
-    if (result.success === true) {
-      const data = result.data
+    if (data) {
       // 反填資料並格式化日期
       form.value = {
         ...data,
@@ -71,20 +70,17 @@ const fetchAdoptionData = async () => {
 const handleSubmit = async () => {
   loading.value = true
   try {
-    const response = await request.put(
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功（含 204）
+    await request.put(
       `/AdoptionRecord/${adoptionId}`,
       form.value,
     )
 
-    if (response.status === 204 || response.data?.success === true) {
-      alert('修改成功！')
-      router.push({ name: 'admin-adoptlist' })
-    } else {
-      alert('修改失敗：' + (response.data?.message || '未知錯誤'))
-    }
+    alert('修改成功！')
+    router.push({ name: 'admin-adoptlist' })
   } catch (error) {
     console.error('更新失敗:', error)
-    alert('系統錯誤，請檢查主控台')
+    alert('修改失敗：' + (error.message || '未知錯誤'))
   } finally {
     loading.value = false
   }

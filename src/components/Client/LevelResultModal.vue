@@ -64,14 +64,10 @@ watch(
 
         console.log('🚀 [API 傳送] 正在同步關卡進度至後端...', submitData)
 
-        const res = await request.post(
-          '/Player/save-game-result',
-          submitData,
-        )
+        await request.post('/Player/save-game-result', submitData)
 
-        if (res.data && res.data.success) {
-          console.log('🎉 [API 成功] 後端已成功記錄進度，資料庫與點數已更新！')
-        }
+        // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+        console.log('🎉 [API 成功] 後端已成功記錄進度，資料庫與點數已更新！')
       } catch (error) {
         console.error('❌ [API 失敗] 傳送遊戲結果失敗，後端服務可能未啟動或報錯：', error)
       }

@@ -30,10 +30,8 @@ const fetchPassports = async () => {
       params: { keyword: keyword.value },
     })
 
-    if (response.data.success === true) {
-      passports.value = response.data.data || []
-      currentPage.value = 1
-    }
+    passports.value = response.data || []
+    currentPage.value = 1
   } catch (error) {
     console.error('取得護照列表失敗:', error)
     alert('讀取資料發生錯誤')
@@ -47,11 +45,9 @@ const deletePassport = async (id) => {
   if (!confirm('確定要刪除這筆健康護照紀錄嗎？此動作不可撤回。')) return
 
   try {
-    const response = await request.patch(`/PassPort/${id}`)
-    if (response.status === 204 || response.data?.success === true) {
-      alert('刪除成功')
-      fetchPassports()
-    }
+    await request.patch(`/PassPort/${id}`)
+    alert('刪除成功')
+    fetchPassports()
   } catch (error) {
     console.error('刪除失敗:', error)
     alert('刪除失敗，該紀錄可能已被引用')

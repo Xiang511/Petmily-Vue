@@ -32,11 +32,8 @@ const fetchRecords = async () => {
       params: { keyword: keyword.value },
     })
 
-    const result = response.data
-    if (result.success === true) {
-      allRecords.value = result.data || []
-      currentPage.value = 1 // 搜尋後回到第一頁
-    }
+    allRecords.value = response.data || []
+    currentPage.value = 1 // 搜尋後回到第一頁
   } catch (error) {
     console.error('取得領養紀錄失敗:', error)
     alert('無法取得資料，請確認後端 API 是否啟動')
@@ -50,11 +47,9 @@ const deleteRecord = async (id) => {
   if (!confirm('確定要刪除這筆領養紀錄嗎?')) return
 
   try {
-    const response = await request.patch(`/AdoptionRecord/${id}`)
-    if (response.status === 204 || response.data?.success === true) {
-      alert('刪除成功')
-      fetchRecords() // 刷新列表
-    }
+    await request.patch(`/AdoptionRecord/${id}`)
+    alert('刪除成功')
+    fetchRecords() // 刷新列表
   } catch (error) {
     console.error('刪除失敗:', error)
     alert('刪除失敗')

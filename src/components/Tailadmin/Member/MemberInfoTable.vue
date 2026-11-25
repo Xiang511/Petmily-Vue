@@ -49,7 +49,7 @@ async function GetAllMemberInfo() {
   isLoading.value = true
   try {
     const { data } = await request.get('/Users')
-    const UserInfo = data.data
+    const UserInfo = data
     UserInfo.forEach((i) => {
       userList.push({
         userId: i.userId,

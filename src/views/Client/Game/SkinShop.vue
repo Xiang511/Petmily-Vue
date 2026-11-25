@@ -73,8 +73,8 @@ const fetchData = async () => {
     
     // 1. 【修改】使用動態 PlayerId 獲取玩家資料
     const playerResponse = await request.get(`/Player/${playerId}`)
-    if (playerResponse.data.success) {
-      playerData.value = playerResponse.data.data
+    if (playerResponse.data) {
+      playerData.value = playerResponse.data
       
       if (playerData.value) {
         userPoints.value = playerData.value.currentPoint
@@ -85,8 +85,8 @@ const fetchData = async () => {
 
     // 2. 獲取所有造型
     const shopResponse = await request.get('/Shop')
-    if (shopResponse.data.success) {
-      const shopSkins = shopResponse.data.data
+    if (shopResponse.data) {
+      const shopSkins = shopResponse.data
       
       // 3. 合併資料：為每個造型添加 isOwned 標誌
       allSkins.value = shopSkins.map(skin => {
@@ -184,37 +184,36 @@ const confirmBuySkin = async () => {
       { playerId: playerId, skinId: pendingSkin.value.id }
     )
 
-    if (response.data.success) {
-      // 更新點數
-      const newPoints = response.data.data.remainingPoints
-      userPoints.value = newPoints
-      
-      animate(animatedPoints.value, {
-        value: newPoints,
-        duration: 800,
-        easing: 'easeOutQuint',
-        round: 1
-      })
+    // 業務失敗（例如點數不足）會被攔截器轉成 reject，走到這裡即代表購買成功
+    // 更新點數
+    const newPoints = response.data.remainingPoints
+    userPoints.value = newPoints
 
-      // 更新本地造型狀態
-      const updatedSkin = allSkins.value.find(s => s.id === pendingSkin.value.id)
-      if (updatedSkin) {
-        updatedSkin.isOwned = true
-      }
-      if (previewSkin.value.id === pendingSkin.value.id) {
-        previewSkin.value.isOwned = true
-      }
-      await equipSkin(pendingSkin.value.id)
+    animate(animatedPoints.value, {
+      value: newPoints,
+      duration: 800,
+      easing: 'easeOutQuint',
+      round: 1
+    })
 
-      closeModal()
-      playSFX('success')
-      
-      // 重新獲取玩家資料以同步
-      await fetchData()
+    // 更新本地造型狀態
+    const updatedSkin = allSkins.value.find(s => s.id === pendingSkin.value.id)
+    if (updatedSkin) {
+      updatedSkin.isOwned = true
     }
+    if (previewSkin.value.id === pendingSkin.value.id) {
+      previewSkin.value.isOwned = true
+    }
+    await equipSkin(pendingSkin.value.id)
+
+    closeModal()
+    playSFX('success')
+
+    // 重新獲取玩家資料以同步
+    await fetchData()
   } catch (error) {
     console.error('購買失敗:', error)
-    alert(error.response?.data?.message || '購買失敗，請稍後重試')
+    alert(error.message || '購買失敗，請稍後重試')
   }
 }
 
@@ -225,26 +224,25 @@ const equipSkin = async (id) => {
     const playerStore = usePlayerStore()
     const playerId = playerStore.playerId
     
-    const response = await request.put(
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.put(
       `/Player/${playerId}/equip-skin`,
       { playerId: playerId, skinId: id }
     )
 
-    if (response.data.success) {
-      // 立即更新本地狀態
-      currentEquippedId.value = id
-      
-      // 更新預覽造型的狀態
-      if (previewSkin.value) {
-        previewSkin.value = { ...previewSkin.value }
-      }
-      
-      playSFX('click')
-      console.log('造型裝備成功')
+    // 立即更新本地狀態
+    currentEquippedId.value = id
+
+    // 更新預覽造型的狀態
+    if (previewSkin.value) {
+      previewSkin.value = { ...previewSkin.value }
     }
+
+    playSFX('click')
+    console.log('造型裝備成功')
   } catch (error) {
     console.error('裝備失敗:', error)
-    alert(error.response?.data?.message || '裝備失敗，請稍後重試')
+    alert(error.message || '裝備失敗，請稍後重試')
   }
 }
 

@@ -54,8 +54,8 @@ onMounted(async () => {
   try {
     const userId = authStore.userInfo?.userId || authStore.userInfo?.id
     const response = await request.get(`/users/pet/passport/${passportId.value}?userId=${userId}`)
-    if (response.data && response.data.data) {
-      const data = response.data.data
+    if (response.data) {
+      const data = response.data
       const genderRevMap = {
         1: '公',
         2: '母',

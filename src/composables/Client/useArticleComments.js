@@ -19,7 +19,7 @@ export function useArticleComments(articleIdRef) {
 
     try {
       const response = await request.get(`/Users/articles/${articleId}/comments`)
-      comments.value = response.data.data || []
+      comments.value = response.data || []
     } catch (error) {
       console.error('取得留言失敗:', error)
       console.error('後端錯誤內容:', error.response?.data)

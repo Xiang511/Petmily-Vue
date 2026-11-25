@@ -55,12 +55,12 @@ const fetchPlayerData = async () => {
 
     console.log('📡 API 回應:', response.data)
 
-    if (response.data && response.data.success) {
-      playerData.value = response.data.data
-      playerName.value = response.data.data.userName || '玩家'
+    if (response.data) {
+      playerData.value = response.data
+      playerName.value = response.data.userName || '玩家'
       console.log('✅ 玩家名稱已更新:', playerName.value)
     // 【新增】檢查是否為新玩家（UserName 為空）
-      if (!response.data.data.userName || response.data.data.userName.trim() === '') {
+      if (!response.data.userName || response.data.userName.trim() === '') {
         console.log('🆕 檢測到新玩家，顯示暱稱設定 Modal')
         showNicknameModal.value = true
       }
@@ -183,22 +183,18 @@ const submitNickname = async () => {
 
     console.log('📡 API 回應:', response.data)
 
-    if (response.data && response.data.success) {
-      console.log('✅ 暱稱設定成功')
-      // 更新本地狀態
-      playerName.value = newNickname.value.trim()
-      // 更新 Pinia store
-      playerStore.playerName = newNickname.value.trim()
-      // 關閉 Modal
-      showNicknameModal.value = false
-      newNickname.value = ''
-    } else {
-      console.log('⚠️ API 回應失敗:', response.data)
-      alert('暱稱設定失敗，請稍後重試')
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    console.log('✅ 暱稱設定成功')
+    // 更新本地狀態
+    playerName.value = newNickname.value.trim()
+    // 更新 Pinia store
+    playerStore.playerName = newNickname.value.trim()
+    // 關閉 Modal
+    showNicknameModal.value = false
+    newNickname.value = ''
   } catch (error) {
     console.error('❌ 提交暱稱失敗:', error)
-    alert('暱稱設定失敗，請稍後重試')
+    alert(error.message || '暱稱設定失敗，請稍後重試')
   } finally {
     isSubmittingNickname.value = false
   }

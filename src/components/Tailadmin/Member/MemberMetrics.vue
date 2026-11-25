@@ -12,10 +12,10 @@ async function GetMemberSummary() {
   isLoading.value = true
   try {
     const { data } = await request.get('/Users/Summary')
-    memberCount.value = data.data.memberCount
-    memberMonthSignUp.value = data.data.memberMonthSignUp
-    verifyPercentage.value = data.data.verifyPercentage + '%'
-    subscribedMemberCount.value = data.data.subscribedMemberCount
+    memberCount.value = data.memberCount
+    memberMonthSignUp.value = data.memberMonthSignUp
+    verifyPercentage.value = data.verifyPercentage + '%'
+    subscribedMemberCount.value = data.subscribedMemberCount
     // console.log(data)
     // console.log(data.data.memberCount)
   } catch (error) {

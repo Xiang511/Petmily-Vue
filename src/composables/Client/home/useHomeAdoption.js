@@ -10,8 +10,9 @@ export function useHomeAdoption() {
     try {
       isAdoptionLoading.value = true
       const response = await axios.get('/users/pet/adoption')
-      const { success, data } = response.data
-      if (success && data && data.length > 0) {
+      // 攔截器已解包，response.data 即為寵物清單
+      const data = response.data
+      if (data && data.length > 0) {
         adoptionPets.value = data.slice(0, 4).map((pet) => {
           let age = pet.age || 0
           if (pet.birthDate) {

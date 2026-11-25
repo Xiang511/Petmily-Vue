@@ -52,7 +52,7 @@ const fetchArticleDetail = async () => {
 
   try {
     const response = await request.get(`/Users/articles/${articleId.value}`)
-    articleDetail.value = response.data.data
+    articleDetail.value = response.data
   } catch (error) {
     console.error('取得文章詳細失敗:', error)
     isError.value = true

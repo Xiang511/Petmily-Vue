@@ -12,7 +12,7 @@ const enews = ref(null)
 onMounted(async () => {
   try {
     const response = await request.get(`/ENewsletter/${enewsId}`)
-    enews.value = response.data.data
+    enews.value = response.data
   } catch (error) {
     console.error('撈取電子報失敗:', error)
   }

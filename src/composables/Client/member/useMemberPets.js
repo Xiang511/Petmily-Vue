@@ -22,11 +22,11 @@ export function useMemberPets() {
     petsLoading.value = true
     try {
       const res = await request.get(`/users/pet/passports?userId=${userId}`)
-      if (!res.data?.success || !Array.isArray(res.data?.data)) return
+      if (!Array.isArray(res.data)) return
 
       const today = new Date()
 
-      myPets.value = res.data.data.map((p) => {
+      myPets.value = res.data.map((p) => {
         const upcomingDates = []
         let hasOverdue = false
 

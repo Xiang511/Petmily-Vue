@@ -15,9 +15,9 @@ const loadQaData = async (page = 1) => {
   try {
     const response = await request.get(`/Support/Qa?page=${page}`)
     const result = response.data
-    qaData.value = result.data.items || []
-    totalPages.value = result.data.totalPages || 1
-    currentPage.value = Number(result.data.currentPage || page)
+    qaData.value = result.items || []
+    totalPages.value = result.totalPages || 1
+    currentPage.value = Number(result.currentPage || page)
   } catch (error) {
     console.error('取得QA資料失敗:', error)
   } finally {
@@ -114,7 +114,7 @@ const fetchDashboardData = async () => {
   isDashboardLoading.value = true
   try {
     const res = await request.get('/Support/Dashboard')
-    const dashboardData = res.data.data
+    const dashboardData = res.data
 
     isDashboardLoading.value = false
     await nextTick()

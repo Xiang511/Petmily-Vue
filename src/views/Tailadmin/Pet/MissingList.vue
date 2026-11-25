@@ -32,11 +32,8 @@ const fetchReports = async () => {
       params: { keyword: keyword.value },
     })
 
-    const result = response.data
-    if (result.success === true) {
-      allReports.value = result.data || []
-      currentPage.value = 1
-    }
+    allReports.value = response.data || []
+    currentPage.value = 1
   } catch (error) {
     console.error('取得走失列表失敗:', error)
     alert('無法取得資料')
@@ -50,11 +47,9 @@ const deleteReport = async (id) => {
   if (!confirm('確定要刪除這筆走失報告嗎?')) return
 
   try {
-    const response = await request.patch(`/MissingReports/${id}`)
-    if (response.status === 204 || response.data?.success === true) {
-      alert('刪除成功')
-      fetchReports()
-    }
+    await request.patch(`/MissingReports/${id}`)
+    alert('刪除成功')
+    fetchReports()
   } catch (error) {
     console.error('刪除失敗:', error)
     alert('刪除失敗')

@@ -35,18 +35,14 @@ const saveChanges = async () => {
 
     console.log('修正後的發送資料:', payload)
 
-    const response = await request.put(`/Player/${payload.PlayerId}`, payload)
-
-    if (response.data.success) {
-      alert('更新成功')
-      closeModal()
-      await fetchPlayers()
-    } else {
-      alert('更新失敗：' + response.data.message)
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.put(`/Player/${payload.PlayerId}`, payload)
+    alert('更新成功')
+    closeModal()
+    await fetchPlayers()
   } catch (error) {
-    console.error('API 呼叫失敗:', error.response?.data || error.message)
-    alert('儲存發生錯誤')
+    console.error('API 呼叫失敗:', error.message)
+    alert('更新失敗：' + (error.message || '儲存發生錯誤'))
   } finally {
     isSubmitting.value = false
   }
@@ -78,15 +74,10 @@ const fetchPlayers = async () => {
   try {
     const response = await request.get('/Player')
     console.log('API 回傳原始內容：', response.data)
-    // response.data 是後端的 ApiResult
-    // response.data.data 是你 Controller 裡 return Success 丟出來的匿名物件 { Data, CurrentPage, TotalCount }
-    // 所以真正的清單是在 response.data.data.data
-    if (response.data && response.data.success && response.data.data) {
-      players.value = response.data.data.data
-    } else {
-      // 備援機制：如果格式不如預期，嘗試取 response.data
-      players.value = response.data || []
-    }
+    // 攔截器已解包 ApiResult，response.data 是 Controller 的匿名物件 { data, currentPage, totalCount }
+    // 所以真正的清單是在 response.data.data（這個 data 是分頁物件的欄位，不是 axios 的）
+    const page = response.data
+    players.value = Array.isArray(page) ? page : page?.data || []
   } catch (error) {
     console.error('抓取玩家資料失敗:', error)
   } finally {
@@ -104,17 +95,13 @@ const deletePlayer = async (playerId, userName) => {
   }
 
   try {
-    const response = await request.delete(`/Player/${playerId}`)
-
-    if (response.data.success) {
-      alert(`玩家 ${displayName} 已成功刪除`)
-      await fetchPlayers()
-    } else {
-      alert('刪除失敗：' + response.data.message)
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.delete(`/Player/${playerId}`)
+    alert(`玩家 ${displayName} 已成功刪除`)
+    await fetchPlayers()
   } catch (error) {
     console.error('刪除玩家失敗:', error)
-    alert('伺服器錯誤，無法刪除玩家')
+    alert('刪除失敗：' + (error.message || '伺服器錯誤，無法刪除玩家'))
   }
 }
 
@@ -144,8 +131,8 @@ const searchPlayers = async (keyword) => {
 
     console.log('API 回傳完整結構：', response.data)
 
-    if (response.data && response.data.success && response.data.data) {
-      const result = response.data.data
+    if (response.data) {
+      const result = response.data
       players.value = result.data || result.Data || (Array.isArray(result) ? result : [])
 
       console.log('最終賦值給 players 的內容：', players.value)
@@ -155,7 +142,7 @@ const searchPlayers = async (keyword) => {
   } catch (error) {
     console.error('搜尋失敗:', error)
     players.value = []
-    alert('搜尋發生錯誤: ' + (error.response?.data?.message || error.message))
+    alert('搜尋發生錯誤: ' + error.message)
   } finally {
     isLoading.value = false // 務必確保這行會執行
   }
@@ -181,11 +168,11 @@ const openRecordModal = async (player) => {
 
   try {
     const response = await request.get(`/Player/${player.playerId}/logs`)
-    if (response.data.success) {
+    if (response.data) {
       playerRecords.value = {
         playerName: player.userName,
-        consumptionLogs: response.data.data.consumptionLogs || [],
-        pointLogs: response.data.data.pointLogs || [],
+        consumptionLogs: response.data.consumptionLogs || [],
+        pointLogs: response.data.pointLogs || [],
       }
     }
   } catch (error) {

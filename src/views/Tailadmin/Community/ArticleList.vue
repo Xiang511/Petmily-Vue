@@ -14,7 +14,7 @@ const FetchArticles = async () => {
   try {
     const response = await request.get('/Article')
     console.log('API 回傳資料結構：', response.data)
-    Articles.value = response.data.data
+    Articles.value = response.data
   } catch (error) {
     console.error('無法取得文章：', error)
   }

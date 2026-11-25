@@ -35,18 +35,13 @@ const loading = ref(false)
 const handleSubmit = async () => {
   loading.value = true
   try {
-    const response = await request.post('/MissingReports', form.value)
-    const result = response.data
-
-    if (result.success === true) {
-      alert('新增成功！')
-      router.push({ name: 'admin-missinglist' }) // 導回列表
-    } else {
-      alert('新增失敗：' + (result.message || '未知錯誤'))
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.post('/MissingReports', form.value)
+    alert('新增成功！')
+    router.push({ name: 'admin-missinglist' }) // 導回列表
   } catch (error) {
     console.error('提交失敗:', error)
-    alert('系統錯誤，請檢查後端 API')
+    alert('新增失敗：' + (error.message || '未知錯誤'))
   } finally {
     loading.value = false
   }

@@ -34,8 +34,8 @@ export function useCommunityHome() {
         }),
       ])
 
-      allCategories.value = categoriesResponse.data.data || []
-      articleData.value = articlesResponse.data.data || []
+      allCategories.value = categoriesResponse.data || []
+      articleData.value = articlesResponse.data || []
     } catch (error) {
       console.error('資料載入失敗:', error)
       isError.value = true

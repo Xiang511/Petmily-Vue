@@ -57,8 +57,8 @@ const handleSubmit = async () => {
     console.log('重設密碼郵件發送回應:', response.data)
     console.log('回應完整結構:', JSON.stringify(response.data, null, 2))
 
-    // 檢查是否成功
-    if (response.status === 200 && response.data?.success) {
+    // 業務失敗已由攔截器轉成 reject，這裡只確認 HTTP 狀態
+    if (response.status === 200) {
       isSubmitted.value = true
 
       // 顯示成功訊息

@@ -27,13 +27,12 @@ async function getSuccessfulLogins() {
     console.log('========== 成功登入完整回應 ==========')
     console.log('response:', response)
     console.log('response.data:', response.data)
-    console.log('response.data.data:', response.data?.data)
     console.log('=====================================')
 
     const { data } = response
 
-    // API 返回格式：{ success, code, message, data: { data: [...], pagination: {...} } }
-    const result = data?.data?.data || []
+    // 攔截器已解包 { success, code, message, data }，data 即為 { data: [...], pagination: {...} }
+    const result = data?.data || []
 
     if (!Array.isArray(result)) {
       console.warn('成功登入記錄不是陣列格式，實際類型:', typeof result, result)
@@ -55,13 +54,12 @@ async function getFailedLogins() {
     console.log('========== 失敗登入完整回應 ==========')
     console.log('response:', response)
     console.log('response.data:', response.data)
-    console.log('response.data.data:', response.data?.data)
     console.log('=====================================')
 
     const { data } = response
 
-    // API 返回格式：{ success, code, message, data: { data: [...], pagination: {...} } }
-    const result = data?.data?.data || []
+    // 攔截器已解包 { success, code, message, data }，data 即為 { data: [...], pagination: {...} }
+    const result = data?.data || []
 
     if (!Array.isArray(result)) {
       console.warn('失敗登入記錄不是陣列格式，實際類型:', typeof result, result)

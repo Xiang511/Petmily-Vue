@@ -306,16 +306,16 @@ const updateAreaContent = async () => {
   try {
     // A. 撲取通關歷史紀錄 - 【修改】使用動態 PlayerId
     const historyRes = await request.get(`/Player/${playerId}/game-history`)
-    if (historyRes.data && historyRes.data.success) {
-      apiGameHistory.value = historyRes.data.data
+    if (historyRes.data) {
+      apiGameHistory.value = historyRes.data
       isServerConnected.value = true;
       console.log('✅ 通關歷史已加載:', apiGameHistory.value.length, '筆')
     }
 
     // B. 精準撲取玩家資料 - 【修改】使用動態 PlayerId
     const playerRes = await request.get(`/Player/${playerId}`)
-    if (playerRes.data && playerRes.data.success) {
-      const playerData = playerRes.data.data
+    if (playerRes.data) {
+      const playerData = playerRes.data
       userPoints.value = playerData.currentPoint ?? 0
       console.log('✅ [玩家資料同步成功] PlayerId:', playerId, ', 實時點數為:', userPoints.value)
     }

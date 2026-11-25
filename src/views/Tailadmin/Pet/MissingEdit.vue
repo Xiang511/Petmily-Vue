@@ -45,10 +45,9 @@ const formatDateForInput = (dateString) => {
 const fetchReportData = async () => {
   try {
     const response = await request.get(`/MissingReports/${reportId}`)
-    const result = response.data
+    const data = response.data
 
-    if (result.success === true) {
-      const data = result.data
+    if (data) {
       // 反填資料
       form.value = {
         ...data,
@@ -73,20 +72,17 @@ const fetchReportData = async () => {
 const handleSubmit = async () => {
   loading.value = true
   try {
-    const response = await request.put(
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功（含 204）
+    await request.put(
       `/MissingReports/${reportId}`,
       form.value,
     )
 
-    if (response.status === 204 || response.data?.success === true) {
-      alert('資料儲存成功！')
-      router.push({ name: 'admin-missinglist' })
-    } else {
-      alert('儲存失敗：' + (response.data?.message || '未知錯誤'))
-    }
+    alert('資料儲存成功！')
+    router.push({ name: 'admin-missinglist' })
   } catch (error) {
     console.error('更新失敗:', error)
-    alert('系統錯誤，請檢查後端 API')
+    alert('儲存失敗：' + (error.message || '未知錯誤'))
   } finally {
     loading.value = false
   }

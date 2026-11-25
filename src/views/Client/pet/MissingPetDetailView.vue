@@ -21,7 +21,7 @@ const fetchPetDetail = async (id) => {
   loading.value = true
   try {
     const response = await request.get(`/users/missing-pets/${id}`)
-    pet.value = response.data.data || response.data
+    pet.value = response.data
   } catch (error) {
     console.error('取得寵物詳細資料失敗:', error)
     alert('找不到這筆遺失紀錄或已被撤銷')

@@ -25,7 +25,7 @@ const loadEnews = async () => {
   try {
     const response = await request.get('/ENewsletter?page=1&pageSize=100')
     const result = response.data
-    const rawData = result.data?.items || result.items || result || []
+    const rawData = result?.items || result || []
 
     // 只保留狀態為已發送的電子報，擋掉預約發送的資料
     enewsList.value = rawData.filter((news) => news.status === '已發送')

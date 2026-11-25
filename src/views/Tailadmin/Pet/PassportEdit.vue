@@ -33,10 +33,9 @@ const fetching = ref(true)
 const fetchPassportData = async () => {
   try {
     const response = await request.get(`/PassPort/${passportId}`)
-    const result = response.data
+    const data = response.data
 
-    if (result.success === true) {
-      const data = result.data
+    if (data) {
       form.value = {
         passportId: data.passportId,
         weight: data.weight,
@@ -60,21 +59,17 @@ const fetchPassportData = async () => {
 const handleSubmit = async () => {
   loading.value = true
   try {
-    const response = await request.put(
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功（含 204）
+    await request.put(
       `/PassPort/${passportId}`,
       form.value,
     )
 
-    // 判斷 204 NoContent 或 200 Success
-    if (response.status === 204 || response.data?.success === true) {
-      alert('健康護照修改成功！')
-      router.push({ name: 'admin-passportlist' })
-    } else {
-      alert('修改失敗：' + (response.data?.message || '未知錯誤'))
-    }
+    alert('健康護照修改成功！')
+    router.push({ name: 'admin-passportlist' })
   } catch (error) {
     console.error('更新失敗:', error)
-    alert('系統錯誤，請檢查主控台')
+    alert('修改失敗：' + (error.message || '未知錯誤'))
   } finally {
     loading.value = false
   }

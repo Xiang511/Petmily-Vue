@@ -120,8 +120,8 @@ const handleSubmit = async () => {
 
     console.log('重設密碼回應:', response.data)
 
-    // 檢查是否成功
-    if (response.status === 200 && response.data?.success) {
+    // 業務失敗已由攔截器轉成 reject，這裡只確認 HTTP 狀態
+    if (response.status === 200) {
       console.log('密碼重設成功')
 
       // 顯示成功訊息，強制等待 2 秒

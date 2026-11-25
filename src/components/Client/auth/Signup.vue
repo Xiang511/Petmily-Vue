@@ -103,8 +103,8 @@ const requestRegisterCode = async () => {
 
     console.log('註冊第一步回應:', response.data)
 
-    // 檢查是否成功發送驗證碼
-    if (response.status === 200 && response.data?.success) {
+    // 業務失敗已由攔截器轉成 reject，這裡只確認 HTTP 狀態
+    if (response.status === 200) {
       // 保存第一步的響應數據
       firstStepResponse.value = response.data
       isEmailSent.value = true
@@ -177,8 +177,8 @@ const verifyEmailAndRegister = async () => {
 
     console.log('Email 驗證回應:', response.data)
 
-    // 檢查驗證是否成功
-    if (response.status === 200 && response.data?.success) {
+    // 業務失敗已由攔截器轉成 reject，這裡只確認 HTTP 狀態
+    if (response.status === 200) {
       // 顯示成功訊息
       await Swal.fire({
         icon: 'success',
@@ -274,14 +274,14 @@ const handleGoogleSignUp = async () => {
 
     console.log('🟢 [Google SignUp] 後端回應:', backendResponse.data)
 
-    const isSuccess = backendResponse.data?.success || backendResponse.status === 200
-    const userData = backendResponse.data?.data?.user
+    // 業務失敗已由攔截器轉成 reject，這裡只需確認有用戶資料
+    const userData = backendResponse.data?.user
 
-    if (isSuccess && userData) {
+    if (userData) {
       authStore.setLoginInfo(userData)
 
-      if (backendResponse.data?.data?.token) {
-        localStorage.setItem('token', backendResponse.data.data.token)
+      if (backendResponse.data?.token) {
+        localStorage.setItem('token', backendResponse.data.token)
       }
 
       await nextTick()
@@ -304,7 +304,7 @@ const handleGoogleSignUp = async () => {
         window.location.href = '/user/profile'
       }
     } else {
-      throw new Error(backendResponse.data?.message || '後端驗證失敗：未返回用戶資料')
+      throw new Error('後端驗證失敗：未返回用戶資料')
     }
   } catch (error) {
     console.error('🔴 [Google SignUp] 失敗:', error)

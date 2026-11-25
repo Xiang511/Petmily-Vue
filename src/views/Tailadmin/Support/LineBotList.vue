@@ -16,7 +16,7 @@ const loadLineMessages = async (page = 1) => {
     const result = response.data
 
     lineMessages.value =
-      result.data.items.map((item) => ({
+      result.items.map((item) => ({
         messageId: item.id,
         userName: `會員 ${item.userId}`,
         userId: item.userId,
@@ -25,7 +25,7 @@ const loadLineMessages = async (page = 1) => {
         status: item.status || '未回覆',
       })) || []
 
-    totalPages.value = result.data.totalPages || 1
+    totalPages.value = result.totalPages || 1
     currentPage.value = page
   } catch (error) {
     console.error('取得 LINE 訊息失敗:', error)

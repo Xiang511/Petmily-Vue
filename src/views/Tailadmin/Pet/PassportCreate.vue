@@ -46,17 +46,13 @@ const loading = ref(false)
 const handleSubmit = async () => {
   loading.value = true
   try {
-    const response = await request.post('/PassPort', form.value)
-
-    if (response.data.success === true) {
-      alert('健康護照紀錄新增成功！')
-      router.push({ name: 'admin-passportlist' })
-    } else {
-      alert('新增失敗：' + (response.data?.message || '未知錯誤'))
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.post('/PassPort', form.value)
+    alert('健康護照紀錄新增成功！')
+    router.push({ name: 'admin-passportlist' })
   } catch (error) {
     console.error('提交錯誤:', error)
-    alert('系統錯誤，請確認後端 API 接收格式')
+    alert('新增失敗：' + (error.message || '未知錯誤'))
   } finally {
     loading.value = false
   }

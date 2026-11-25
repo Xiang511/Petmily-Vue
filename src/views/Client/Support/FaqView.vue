@@ -27,7 +27,7 @@ const loadFaqs = async () => {
   try {
     const response = await request.get('/Support/Faq?page=1&pageSize=100')
     const result = response.data
-    faqList.value = (result.data.items || []).filter((faq) => faq.status === '已發佈')
+    faqList.value = (result?.items || []).filter((faq) => faq.status === '已發佈')
   } catch (error) {
     console.error('取得 FAQ 失敗:', error)
   } finally {

@@ -77,8 +77,8 @@ const fetchGameQuestions = async () => {
       params: { category: '認養須知' }
     })
     
-    if (response.data.success) {
-      questions.value = response.data.data
+    if (response.data) {
+      questions.value = response.data
       console.log('PawsPort 題庫連線成功！已載入 10 題隨機問答題：', questions.value)
     }
   } catch (error) {

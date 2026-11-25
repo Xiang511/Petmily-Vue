@@ -128,8 +128,8 @@ export function useEditorState(emit, quillInstanceRef) {
 
       console.log('圖片上傳 response.data=', response.data)
 
-      const imageUrl =
-        response.data?.url || response.data?.data?.url || response.data?.data || response.data
+      // 攔截器已解包，後端可能回 { url } 或直接回字串網址
+      const imageUrl = response.data?.url || response.data
 
       console.log('imageUrl=', imageUrl)
 

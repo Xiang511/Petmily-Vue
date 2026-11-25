@@ -12,9 +12,9 @@ const loadFaqData = async (page = 1) => {
     const response = await request.get(`/Support/Faq?page=${page}&pageSize=10`)
     const result = response.data
     console.log('後端回傳的完整資料：', result)
-    faqData.value = result.data.items
-    currentPage.value = result.data.currentPage
-    totalPages.value = result.data.totalPages
+    faqData.value = result.items
+    currentPage.value = result.currentPage
+    totalPages.value = result.totalPages
   } catch (error) {
     console.error('無法連線到API:', error)
   }

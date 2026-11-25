@@ -24,16 +24,28 @@ service.interceptors.request.use(
 // 2. 設定回應攔截器 (Response Interceptor)
 service.interceptors.response.use(
   (response) => {
-    // console.log(' 收到回應:', response.config.url, response.status)
-
-    // 特別檢查登入請求
-    if (response.config.url?.includes('login')) {
-      console.log(' 登入成功')
+    // 後端統一包裝 { success, data, message }：
+    //  - success === false（HTTP 200 的業務失敗）→ 轉成 reject，呼叫端統一用 catch 處理
+    //  - success === true → 解包，讓呼叫端的 res.data 直接是內層資料
+    const body = response.data
+    if (body && typeof body === 'object' && !Array.isArray(body) && 'success' in body) {
+      if (body.success === false) {
+        const err = new Error(body.message || '操作失敗')
+        err.response = response
+        err.isBusinessError = true
+        return Promise.reject(err)
+      }
+      response.message = body.message
+      response.data = body.data
     }
     return response
   },
   (error) => {
     console.log(' 請求失敗:', error.config?.url, error.response?.status)
+
+    // 把後端回傳的錯誤訊息放到 error.message，呼叫端統一讀 err.message
+    const serverMsg = error.response?.data?.message
+    if (serverMsg) error.message = serverMsg
 
     //  處理 401 Unauthorized - 未認證，跳轉到登入頁
     //  skipAuthRedirect：用於「確認是否已登入」的請求，未登入是正常結果，不需跳轉

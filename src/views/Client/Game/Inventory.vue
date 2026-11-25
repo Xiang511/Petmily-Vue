@@ -69,8 +69,8 @@ const fetchData = async () => {
 
     // 1. 【修改】使用動態 PlayerId 獲取玩家資料
     const playerResponse = await request.get(`/Player/${playerId}`)
-    if (playerResponse.data.success) {
-      playerData.value = playerResponse.data.data
+    if (playerResponse.data) {
+      playerData.value = playerResponse.data
 
       if (playerData.value) {
         userPoints.value = playerData.value.currentPoint
@@ -80,8 +80,8 @@ const fetchData = async () => {
 
     // 2. 獲取所有造型
     const shopResponse = await request.get('/Shop')
-    if (shopResponse.data.success) {
-      const shopSkins = shopResponse.data.data
+    if (shopResponse.data) {
+      const shopSkins = shopResponse.data
 
       // 3. 合併資料
       allSkins.value = shopSkins.map((skin) => {
@@ -187,26 +187,25 @@ const equipSkin = async (id) => {
   const playerStore = usePlayerStore()
     const playerId = playerStore.playerId
   try {
-    const response = await request.put(`/Player/${playerId}/equip-skin`, {
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.put(`/Player/${playerId}/equip-skin`, {
       playerId: playerId,
       skinId: id,
     })
 
-    if (response.data.success) {
-      // 立即更新本地狀態
-      currentEquippedId.value = id
+    // 立即更新本地狀態
+    currentEquippedId.value = id
 
-      // 更新預覽造型的狀態
-      if (previewSkin.value) {
-        previewSkin.value = { ...previewSkin.value }
-      }
-
-      playSFX('click');
-      console.log('造型裝備成功')
+    // 更新預覽造型的狀態
+    if (previewSkin.value) {
+      previewSkin.value = { ...previewSkin.value }
     }
+
+    playSFX('click');
+    console.log('造型裝備成功')
   } catch (error) {
     console.error('裝備失敗:', error)
-    alert(error.response?.data?.message || '裝備失敗，請稍後重試')
+    alert(error.message || '裝備失敗，請稍後重試')
   }
 }
 

@@ -43,7 +43,7 @@ const handlePublish = async (postData) => {
     }
   } catch (error) {
     console.error('發布文章失敗：', error)
-    toastRef.value?.trigger(`發布失敗：${error.response?.data?.message || '網路連線異常'}`)
+    toastRef.value?.trigger(`發布失敗：${error.message || '網路連線異常'}`)
   }
 }
 

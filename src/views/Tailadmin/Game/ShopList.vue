@@ -31,9 +31,7 @@ const fetchSkins = async () => {
   isLoading.value = true
   try {
     const response = await request.get('/Shop')
-    if (response.data && response.data.success) {
-      skins.value = response.data.data
-    }
+    skins.value = response.data || []
   } catch (error) {
     console.error('抓取失敗:', error)
   } finally {
@@ -104,21 +102,18 @@ const deleteSkin = async (id) => {
   if (!confirm('確定要從商店移除這個造型嗎？這可能影響玩家的持有紀錄！')) return
 
   try {
-    const response = await request.delete(`/Shop/${id}`)
-    if (response.data && response.data.success) {
-      alert('造型已成功刪除')
-      await fetchSkins()
-    } else {
-      alert('刪除失敗：' + (response.data?.message || '伺服器拒絕請求'))
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.delete(`/Shop/${id}`)
+    alert('造型已成功刪除')
+    await fetchSkins()
   } catch (error) {
     console.error('刪除失敗:', error)
 
-    if (error.response) {
+    if (error.isBusinessError) {
+      alert('刪除失敗：' + (error.message || '伺服器拒絕請求'))
+    } else if (error.response) {
       // 伺服器有回應但狀態碼錯誤 (如 404 或 500)
-      alert(
-        `刪除失敗 (${error.response.status})：${error.response.data?.message || '後端發生錯誤'}`,
-      )
+      alert(`刪除失敗 (${error.response.status})：${error.message || '後端發生錯誤'}`)
     } else if (error.request) {
       // 請求發出但沒收到回應
       alert('無法連線到伺服器，請檢查後端服務是否正常。')

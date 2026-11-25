@@ -29,9 +29,10 @@ const fetchPetDetail = async () => {
   try {
     loading.value = true
     const response = await request.get('/users/pet/adoption')
-    const { success, data } = response.data
+    // 攔截器已解包，response.data 即為寵物清單
+    const data = response.data
 
-    if (success && data) {
+    if (data) {
       const petId = Number(route.params.id)
       const foundPet = data.find((p) => p.petId === petId)
 

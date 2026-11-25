@@ -48,11 +48,8 @@ const fetchQuestions = async () => {
   isLoading.value = true
   try {
     const response = await request.get('/Questions')
-    if (response.data && response.data.success) {
-      questions.value = response.data.data.questionContent
-    } else {
-      questions.value = response.data
-    }
+    // 攔截器已解包，response.data 為 { questionContent, ... }
+    questions.value = response.data?.questionContent || response.data || []
   } catch (error) {
     console.error('抓取失敗:', error)
   } finally {
@@ -151,27 +148,23 @@ const saveQuestion = async () => {
 
     console.log('API 回應:', response.data)
 
-    if (response.data && response.data.success) {
-      const successMessage = isEditMode.value ? '資料已成功修改！' : '資料已成功存入資料庫！'
-      alert(successMessage)
-      closeModal() // 自動執行清空邏輯
-      await fetchQuestions()
-    } else {
-      const errorMessage = response.data?.message || '未知錯誤'
-      alert('儲存失敗：' + errorMessage)
-      console.error('儲存失敗詳情:', response.data)
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    const successMessage = isEditMode.value ? '資料已成功修改！' : '資料已成功存入資料庫！'
+    alert(successMessage)
+    closeModal() // 自動執行清空邏輯
+    await fetchQuestions()
   } catch (error) {
     console.error('完整錯誤訊息:', error)
 
     // 詳細的錯誤診斷
-    if (error.response) {
+    if (error.isBusinessError) {
+      // HTTP 200 但業務失敗（訊息已由攔截器放進 error.message）
+      alert('儲存失敗：' + (error.message || '未知錯誤'))
+    } else if (error.response) {
       // 伺服器有回應，但狀態碼表示錯誤
       console.error('HTTP 狀態碼:', error.response.status)
       console.error('伺服器回應:', error.response.data)
-      alert(
-        `伺服器錯誤 (${error.response.status})：${error.response.data?.message || '請檢查伺服器日誌'}`,
-      )
+      alert(`伺服器錯誤 (${error.response.status})：${error.message || '請檢查伺服器日誌'}`)
     } else if (error.request) {
       // 請求已發送但沒有收到回應
       console.error('未收到伺服器回應:', error.request)
@@ -200,18 +193,15 @@ const deleteQuestion = async (id) => {
     })
     console.log('刪除回應:', response.data)
 
-    if (response.data && response.data.success) {
-      alert('題目已成功刪除！')
-      await fetchQuestions()
-    } else {
-      alert('刪除失敗：' + (response.data?.message || '未知錯誤'))
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    alert('題目已成功刪除！')
+    await fetchQuestions()
   } catch (error) {
     console.error('刪除失敗:', error)
-    if (error.response) {
-      alert(
-        `刪除失敗 (${error.response.status})：${error.response.data?.message || '請檢查伺服器日誌'}`,
-      )
+    if (error.isBusinessError) {
+      alert('刪除失敗：' + (error.message || '未知錯誤'))
+    } else if (error.response) {
+      alert(`刪除失敗 (${error.response.status})：${error.message || '請檢查伺服器日誌'}`)
     } else if (error.request) {
       alert('無法連線到伺服器')
     } else {

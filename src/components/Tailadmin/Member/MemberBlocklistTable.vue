@@ -49,7 +49,7 @@ async function GetAllBlocklistInfo() {
   isLoading.value = true
   try {
     const { data } = await request.get('/Permissions/block/users')
-    const UserInfo = data.data
+    const UserInfo = data
     UserInfo.forEach((i) => {
       blockList.push({
         userId: i.userId,

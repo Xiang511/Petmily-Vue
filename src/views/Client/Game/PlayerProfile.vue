@@ -92,20 +92,20 @@ const fetchPlayerData = async () => {
     
     console.log('【後端回傳的原始資料】:', response.data)
 
-    if (response.data && response.data.success) {
+    if (response.data) {
       // 成功獲取，直接塞給本地響應式變數
-      playerData.value = response.data.data
-      
+      playerData.value = response.data
+
       // 同步回填給全域狀態機 Store 讓大廳點數即時更新
       if (playerStore && playerStore.$patch) {
-        playerStore.$patch({ playerData: response.data.data })
+        playerStore.$patch({ playerData: response.data })
       }
     } else {
-      errorMessage.value = response.data?.message || '獲取玩家資料失敗'
+      errorMessage.value = '獲取玩家資料失敗'
     }
   } catch (error) {
     console.error('API 請求錯誤:', error)
-    errorMessage.value = '無法連接到伺服器，請確認後端 API 是否開啟'
+    errorMessage.value = error.response ? error.message : '無法連接到伺服器，請確認後端 API 是否開啟'
   } finally {
     isLoading.value = false
   }
@@ -152,27 +152,24 @@ const savePlayerName = async () => {
       userName: editedName.value.trim(), // 新增此欄位，但需要後端支援
     }
 
-    const response = await request.put(
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.put(
       `/Player/${playerData.value.playerId}`,
       updateData,
     )
 
-    if (response.data && response.data.success) {
-      // 更新本地資料
-      playerData.value.userName = editedName.value.trim()
-      isEditingName.value = false
-      editedName.value = ''
+    // 更新本地資料
+    playerData.value.userName = editedName.value.trim()
+    isEditingName.value = false
+    editedName.value = ''
 
-      // 播放成功音效
-      playSFX('success')
+    // 播放成功音效
+    playSFX('success')
 
-      console.log('玩家名字更新成功')
-    } else {
-      nameSaveError.value = '更新失敗，請稍後重試'
-    }
+    console.log('玩家名字更新成功')
   } catch (error) {
     console.error('更新玩家名字錯誤:', error)
-    nameSaveError.value = error.response?.data?.message || '無法連接到伺服器'
+    nameSaveError.value = error.response ? error.message : '無法連接到伺服器'
   } finally {
     isSavingName.value = false
   }

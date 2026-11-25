@@ -10,7 +10,7 @@ export function useArticleActions() {
   const fetchDrafts = async () => {
     try {
       const response = await request.get('/Users/articles/drafts')
-      draftsData.value = response.data.data || []
+      draftsData.value = response.data || []
     } catch (error) {
       console.error('Composable 撈取草稿失敗:', error)
     } finally {
@@ -24,7 +24,7 @@ export function useArticleActions() {
     }
 
     const response = await request.get(`/Users/articles/drafts/${id}`)
-    return response.data.data
+    return response.data
   }
 
   // ===軟刪除===
@@ -56,7 +56,7 @@ export function useArticleActions() {
           success: true,
           isNew: true,
           status: response.status,
-          data: response.data?.data,
+          data: response.data,
         }
       }
       const response = await request.put(`/Users/articles/${currentId}`, payload)

@@ -24,9 +24,9 @@ export function useMemberPosts() {
       const res = await request.get(`/users/articles`, {
         params: { UserId: userId, IsActive: true },
       })
-      if (!res.data?.success || !Array.isArray(res.data?.data)) return
+      if (!Array.isArray(res.data)) return
 
-      myPosts.value = res.data.data.map((a) => ({
+      myPosts.value = res.data.map((a) => ({
         id: a.articleId,
         title: a.title,
         summary: a.summary,

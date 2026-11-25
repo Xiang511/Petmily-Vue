@@ -76,7 +76,7 @@ export function useProfileEdit() {
 
     try {
       const res = await request.get(`/Users/${userId}`)
-      const u = res.data?.success && res.data?.data ? res.data.data : user.value
+      const u = res.data || user.value
       editForm.value = mapUserToForm(u)
     } catch (e) {
       // API 失敗時退回 authStore 的快取資料
@@ -123,7 +123,7 @@ export function useProfileEdit() {
 
       const res = await request.put(`/Users/${userId}`, payload)
 
-      if (res.data?.success && res.data?.data) {
+      if (res.data) {
         authStore.setLoginInfo({
           ...authStore.userInfo,
           photo: f.photo || null,
@@ -135,15 +135,15 @@ export function useProfileEdit() {
           note: f.note || null,
           hasPriorExp: f.hasPriorExp,
           isSubscribe: f.isSubscribe,
-          updatedAt: res.data.data.updatedAt || null,
+          updatedAt: res.data.updatedAt || null,
         })
       }
 
       isEditingProfile.value = false
     } catch (e) {
-      const errBody = e?.response?.data
-      saveError.value = errBody?.message || errBody?.title || '儲存失敗，請稍後再試'
-      console.error('[saveProfile] status:', e?.response?.status, 'body:', errBody)
+      // 業務失敗、4xx/5xx、網路錯誤都在這裡，訊息統一讀 e.message
+      saveError.value = e.message || '儲存失敗，請稍後再試'
+      console.error('[saveProfile] status:', e?.response?.status, 'message:', e.message)
     } finally {
       isSaving.value = false
     }

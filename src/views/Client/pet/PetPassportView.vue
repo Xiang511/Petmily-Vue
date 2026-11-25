@@ -34,8 +34,9 @@ const fetchPassports = async () => {
     }
 
     const response = await request.get(`/users/pet/passports?userId=${userId}`)
-    const { success, data } = response.data
-    if (success && data && data.length > 0) {
+    // 攔截器已解包，response.data 即為護照清單
+    const data = response.data
+    if (data && data.length > 0) {
       pets.value = data
       activePetId.value = data[0].id
     } else {

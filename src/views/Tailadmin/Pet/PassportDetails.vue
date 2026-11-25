@@ -23,8 +23,8 @@ const breadcrumbItems = ref([
 const fetchDetails = async () => {
   try {
     const response = await request.get(`/PassPort/${passportId}/detail`)
-    if (response.data.success) {
-      detail.value = response.data.data
+    if (response.data) {
+      detail.value = response.data
     } else {
       alert('找不到資料')
       goBack()

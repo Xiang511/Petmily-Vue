@@ -25,8 +25,9 @@ const fetchPets = async () => {
     loading.value = true
     // 銜接你的 API 格式
     const response = await request.get('/users/pet/adoption')
-    const { success, data } = response.data
-    if (success) {
+    // 攔截器已解包，response.data 即為寵物清單
+    const data = response.data
+    if (data) {
       rawPets.value = data.map((pet) => {
         // 計算年齡
         let age = 0

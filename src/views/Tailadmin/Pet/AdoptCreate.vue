@@ -34,18 +34,13 @@ const loading = ref(false)
 const handleSubmit = async () => {
   loading.value = true
   try {
-    const response = await request.post('/AdoptionRecord', form.value)
-    const result = response.data
-
-    if (result.success === true) {
-      alert('建立成功！')
-      router.push({ name: 'admin-adoptlist' })
-    } else {
-      alert('建立失敗：' + (result.message || '未知錯誤'))
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功
+    await request.post('/AdoptionRecord', form.value)
+    alert('建立成功！')
+    router.push({ name: 'admin-adoptlist' })
   } catch (error) {
     console.error('提交失敗:', error)
-    alert('系統錯誤，請檢查主控台')
+    alert('建立失敗：' + (error.message || '未知錯誤'))
   } finally {
     loading.value = false
   }

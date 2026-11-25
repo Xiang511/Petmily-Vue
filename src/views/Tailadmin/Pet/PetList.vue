@@ -32,17 +32,12 @@ const fetchPets = async () => {
       params: { keyword: keyword.value },
     })
 
-    // ⚠️ 注意：Axios 會將 API 回傳內容包在 response.data 中
-    // 你的 Success 格式就在 response.data 裡面
-    const result = response.data // 這是你的 { data, message, status }
-
-    if (result.success == true) {
-      allPets.value = result.data || []
-      currentPage.value = 1
-    }
+    // 攔截器已解包 { success, data, message }，response.data 即為寵物清單
+    allPets.value = response.data || []
+    currentPage.value = 1
   } catch (error) {
-    // Axios 會自動攔截 4xx/5xx 錯誤，進到這裡
-    console.error('取得資料失敗:', error.response?.data?.message || error.message)
+    // 業務失敗與 4xx/5xx 錯誤都會進到這裡
+    console.error('取得資料失敗:', error.message)
     alert('無法取得資料，請稍後再試')
   } finally {
     loading.value = false
@@ -54,12 +49,10 @@ const deletePet = async (id) => {
   if (!confirm('確定要刪除嗎?')) return
 
   try {
-    const response = await request.patch(`/Pet/${id}`)
-    // 你的後端回傳 NoContent (204)，Axios 會判定為成功
-    if (response.status === 204 || response.data?.success === true || response.data?.status === 200) {
-      alert('刪除成功')
-      fetchPets() // 刷新列表
-    }
+    // 後端回傳 NoContent (204) 或 success，Axios 都判定為成功
+    await request.patch(`/Pet/${id}`)
+    alert('刪除成功')
+    fetchPets() // 刷新列表
   } catch (error) {
     console.error('刪除失敗:', error)
     alert('刪除失敗')

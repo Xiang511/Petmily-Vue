@@ -47,9 +47,9 @@ export function useGameStats() {
       if (!userId) return
 
       const res = await request.get(`/Users/${userId}/player-profile`)
-      if (!res.data?.success || !res.data?.data) return
+      if (!res.data) return
 
-      const d = res.data.data
+      const d = res.data
       const ownedSkins = d.ownedSkins || d.OwnedSkins || []
       // skinId 為 1 的是預設造型，不計入擁有數量
       const filteredSkins = ownedSkins.filter((s) => (s.skinId ?? s.SkinId) !== 1)

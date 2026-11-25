@@ -142,8 +142,8 @@ const fetchGameQuestions = async () => {
       params: { category: currentCategory }
     })
     
-    if (response.data.success) {
-      questions.value = response.data.data
+    if (response.data) {
+      questions.value = response.data
       console.log(`PawsPort 題庫連線成功！已動態載入【${currentCategory}】問答。`, questions.value)
     }
   } catch (error) {

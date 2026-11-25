@@ -26,8 +26,8 @@ const fetchMissingPets = async () => {
   loading.value = true
   try {
     const response = await request.get('/users/missing-pets')
-    // 若後端封裝在 response.data.data 中，請根據實際攔截器調整
-    lostPets.value = response.data.data || response.data || []
+    // 攔截器已解包，response.data 即為清單
+    lostPets.value = response.data || []
   } catch (error) {
     console.error('獲取遺失寵物列表失敗:', error)
   } finally {

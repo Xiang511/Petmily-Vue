@@ -40,7 +40,7 @@ export function useCategories() {
     try {
       const response = await request.get('/Category')
       // 先用 transformCategories 洗過
-      categoriesData.value = transformCategories(response.data.data)
+      categoriesData.value = transformCategories(response.data)
     } catch (error) {
       console.error('取得分類失敗：', error)
       throw error

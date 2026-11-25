@@ -13,8 +13,8 @@ const loadNewsletterData = async (page = 1) => {
   try {
     const response = await request.get(`/ENewsletter?page=${page}`)
     const result = response.data
-    newsletterData.value = result.data.items || []
-    totalPages.value = result.data.totalPages || 1
+    newsletterData.value = result.items || []
+    totalPages.value = result.totalPages || 1
     currentPage.value = page
   } catch (error) {
     console.error('取得電子報資料失敗:', error)

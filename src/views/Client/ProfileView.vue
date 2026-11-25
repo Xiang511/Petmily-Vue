@@ -30,8 +30,8 @@ const fetchProfile = async () => {
   if (!userId) return
   try {
     const res = await request.get(`/Users/${userId}`)
-    if (res.data?.success && res.data?.data) {
-      profile.value = res.data.data
+    if (res.data) {
+      profile.value = res.data
     }
   } catch (e) {
     console.warn('[fetchProfile] 無法取得完整個人資料', e)

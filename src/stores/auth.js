@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
           // 動態載入，避免 store 與 axios 設定互相循環引用
           const { default: request } = await import('@/api/axios')
           const res = await request.get('/Auth/me', { skipAuthRedirect: true })
-          const user = res.data?.data?.user
+          const user = res.data?.user
           if (user) {
             this.setLoginInfo(user)
           } else {

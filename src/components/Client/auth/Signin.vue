@@ -73,11 +73,11 @@ const requestVerificationCode = async () => {
     console.log('驗證碼發送回應:', response.data)
     console.log('回應完整結構:', JSON.stringify(response.data, null, 2))
 
-    // 檢查密碼驗證是否成功
-    if (response.status === 200 && response.data?.success) {
+    // 密碼驗證失敗會被攔截器轉成 reject，走到這裡即代表成功
+    {
       // 若後端判斷距上次登入未超過 20 分鐘，直接完成登入（跳過 Email 驗證）
-      if (response.data?.data?.skipVerification) {
-        const userData = response.data.data.user
+      if (response.data?.skipVerification) {
+        const userData = response.data.user
         if (userData) {
           authStore.setLoginInfo(userData)
           await nextTick()
@@ -117,8 +117,6 @@ const requestVerificationCode = async () => {
         html: '請查看您的電子郵件信箱<br/>並輸入收到的驗證碼',
         confirmButtonText: '確定',
       })
-    } else {
-      throw new Error(response.data?.message || '密碼驗證失敗')
     }
   } catch (error) {
     console.error('發送驗證碼失敗:', error)
@@ -132,7 +130,7 @@ const requestVerificationCode = async () => {
     Swal.fire({
       icon: 'error',
       title: '驗證失敗',
-      text: error.response?.data?.message || error.message || '請檢查帳號密碼是否正確',
+      text: error.message || '請檢查帳號密碼是否正確',
     })
   }
 }
@@ -170,8 +168,8 @@ const verifyCodeAndLogin = async () => {
     }
 
     // 如果第一步響應中有 sessionId 或其他需要的字段，添加到請求中
-    if (firstStepResponse.value?.data?.sessionId) {
-      requestData.sessionId = firstStepResponse.value.data.sessionId
+    if (firstStepResponse.value?.sessionId) {
+      requestData.sessionId = firstStepResponse.value.sessionId
     }
 
     console.log('📤 發送驗證碼驗證請求，參數:', requestData)
@@ -181,9 +179,9 @@ const verifyCodeAndLogin = async () => {
     console.log('驗證碼驗證回應:', response.data)
 
     // 檢查驗證是否成功
-    if (response.status === 200 && response.data?.data?.user) {
+    if (response.data?.user) {
       // 設定登入資訊
-      authStore.setLoginInfo(response.data.data.user)
+      authStore.setLoginInfo(response.data.user)
 
       // 等待 store 更新完成
       await nextTick()
@@ -217,7 +215,7 @@ const verifyCodeAndLogin = async () => {
         window.location.href = '/user/profile'
       }
     } else {
-      throw new Error(response.data?.message || '驗證碼驗證失敗')
+      throw new Error('驗證碼驗證失敗：未返回用戶資料')
     }
   } catch (error) {
     console.error('驗證碼驗證失敗:', error)
@@ -301,11 +299,10 @@ const handleGoogleLogin = async () => {
 
     console.log('🟢 [Google Login] 後端回應:', backendResponse.data)
 
-    // 檢查多種可能的成功狀態
-    const isSuccess = backendResponse.data?.success || backendResponse.status === 200
-    const userData = backendResponse.data?.data?.user
+    // 業務失敗會被攔截器轉成 reject，這裡只需確認有用戶資料
+    const userData = backendResponse.data?.user
 
-    if (isSuccess && userData) {
+    if (userData) {
       // 設定登入資訊
       authStore.setLoginInfo(userData)
 
@@ -341,7 +338,7 @@ const handleGoogleLogin = async () => {
         window.location.href = '/user/profile'
       }
     } else {
-      throw new Error(backendResponse.data?.message || '後端驗證失敗：未返回用戶資料')
+      throw new Error('後端驗證失敗：未返回用戶資料')
     }
   } catch (error) {
     console.error('🔴 [Google Login] 失敗:', error)

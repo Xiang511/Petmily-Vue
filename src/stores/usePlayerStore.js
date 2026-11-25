@@ -38,8 +38,8 @@ export const usePlayerStore = defineStore(
 
         const response = await request.get(`/users/${currentUserId}/player-profile`)
 
-        if (response.data && response.data.success) {
-          const data = response.data.data
+        if (response.data) {
+          const data = response.data
           playerId.value = data.playerId
           playerData.value = data
 
@@ -72,20 +72,17 @@ export const usePlayerStore = defineStore(
         isLoading.value = true
         error.value = null
 
-        const response = await request.put(`/Player/${playerId.value}`, {
+        await request.put(`/Player/${playerId.value}`, {
           playerId: playerId.value,
           userName: newName,
         })
 
-        if (response.data && response.data.success) {
-          if (playerData.value) {
-            playerData.value.userName = newName
-          }
-          console.log('✅ 玩家名稱更新成功')
-          return true
-        } else {
-          throw new Error('更新失敗')
+        // 業務失敗會被攔截器轉成 reject，走到這裡即代表更新成功
+        if (playerData.value) {
+          playerData.value.userName = newName
         }
+        console.log('✅ 玩家名稱更新成功')
+        return true
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : '更新玩家名稱失敗'
         error.value = errorMsg

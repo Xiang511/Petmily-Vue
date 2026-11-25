@@ -130,7 +130,7 @@ async function GetAllMemberPermission() {
   isLoading.value = true
   try {
     const { data } = await request.get('/Permissions/users')
-    const UserInfo = data.data
+    const UserInfo = data
     // 清空原有數據
     userList.splice(0, userList.length)
     // 添加新數據
@@ -159,7 +159,7 @@ async function GetAllMemberPermission() {
 async function GetAllSystem() {
   try {
     const { data } = await request.get('/Permissions/systems')
-    const result = data.data?.systems || data.systems || []
+    const result = data?.systems || []
     systemList.splice(0, systemList.length)
     result.forEach((i) => {
       systemList.push({
@@ -175,7 +175,7 @@ async function GetAllSystem() {
 async function GetAllRole() {
   try {
     const { data } = await request.get('/Permissions/roles')
-    const result = data.data?.roles || data.roles || []
+    const result = data?.roles || []
     roleList.splice(0, roleList.length)
     result.forEach((i) => {
       roleList.push({

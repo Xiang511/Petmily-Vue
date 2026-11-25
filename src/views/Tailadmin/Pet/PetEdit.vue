@@ -42,12 +42,11 @@ const fetching = ref(true) // 初始載入狀態
 const fetchPetData = async () => {
   try {
     const response = await request.get(`/Pet/${petId}`)
-    const result = response.data
+    const data = response.data
 
-    if (result.success === true) {
+    if (data) {
       // 將 API 回傳的資料填入 form
       // 注意：如果是日期欄位，需要做 .split('T')[0] 處理才能正確顯示在 <input type="date">
-      const data = result.data
       form.value = {
         ...data,
         createdAt: data.createdAt ? data.createdAt.split('T')[0] : '',
@@ -70,18 +69,13 @@ const handleSubmit = async () => {
   loading.value = true
   try {
     // 根據你的 Controller，PUT 路徑通常是 /api/Pet/{id}
-    const response = await request.put(`/Pet/${petId}`, form.value)
-
-    // 注意：後端 Edit 如果回傳的是 NoContent()，status 會是 204
-    if (response.status === 204 || response.data?.success === true) {
-      alert('修改成功！')
-      router.push({ name: 'admin-petlist' })
-    } else {
-      alert('修改失敗：' + (response.data?.message || '未知錯誤'))
-    }
+    // 業務失敗會被攔截器轉成 reject，走到這裡即代表成功（含 204 NoContent）
+    await request.put(`/Pet/${petId}`, form.value)
+    alert('修改成功！')
+    router.push({ name: 'admin-petlist' })
   } catch (error) {
     console.error('更新失敗:', error)
-    alert('系統錯誤，請檢查主控台')
+    alert('修改失敗：' + (error.message || '未知錯誤'))
   } finally {
     loading.value = false
   }
